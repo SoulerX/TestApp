@@ -1,0 +1,12 @@
+{
+    "type": "favorite",
+    "data": ["girl": {
+        "cout":1,
+    },
+    "ios": {
+        "cout":2,
+    },
+    "android": {
+        "cout":3,
+    }]
+}
