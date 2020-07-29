@@ -54,16 +54,14 @@ static id _instance;
     }];
 }
 
-// 请求 URL
+// URL
 + (void) requestUrl:(NSString*) strurl completionHandler:(nonnull void (^)(NSArray * _Nullable))completionHandler{
+    
     NSMutableURLRequest *request = [NSMutableURLRequest new];
-    
     [request setURL:[NSURL URLWithString:strurl]];
-    
     [request setHTTPMethod:@"GET"];
     
     NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
-    
     [[session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         
         if(!data)
@@ -78,8 +76,9 @@ static id _instance;
         if(completionHandler)
             completionHandler(dataarray);
         
-       
     }] resume];
 }
 
 @end
+
+

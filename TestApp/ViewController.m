@@ -8,6 +8,8 @@
 
 #import "ViewController.h"
 
+#import "SideTabBarView.h"
+
 #import "JZLoadingViewPacket.h"
 
 #import "DataForFMDB.h"
@@ -32,9 +34,12 @@
 #import <MJRefresh.h>
 #import <MJExtension.h>
 
+// 侧边栏的宽度
+#define LEFT_WIDTH 100
+
 static NSString * const WaterfullId = @"waterfull";
 
-@interface ViewController ()<UICollectionViewDataSource, WaterFallLayoutDelegate>
+@interface ViewController ()<UICollectionViewDataSource, WaterFallLayoutDelegate, SideTabBarViewDelegate>
 
 @property (nonatomic, retain) CycleBannerView *scrollView;
 
@@ -57,6 +62,15 @@ static NSString * const WaterfullId = @"waterfull";
 /** 宽 */
 @property (nonatomic, assign) int w;
 
+@property(nonatomic, strong) SideTabBarView *lefeView;
+
+@property(nonatomic, strong) UIView *bgView;
+
+@property (assign, nonatomic,getter=isHidden)  BOOL hidden;
+
+@property(nonatomic, strong) NSMutableArray *tabItems;
+
+@property(nonatomic, strong)UITabBarController *tabBarController;
 
 @end
 
@@ -74,20 +88,10 @@ static NSString * const WaterfullId = @"waterfull";
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    DataForFMDB *db = [DataForFMDB sharedDataBase];
+//    [self initDataBase];
+    
+    [self initSideTabBar];
 
-//    [[DataForFMDB sharedDataBase] addFavorite:@"girl" urlPath:@"http://gank.io/images/f4f6d68bf30147e1bdd4ddbc6ad7c2a2"];
-//    [[DataForFMDB sharedDataBase] addFavorite:@"ios" urlPath:@"https://github.com/pujiaxin33/JXPatternLock"];
-//    [[DataForFMDB sharedDataBase] addFavorite:@"android" urlPath:@"https://github.com/loperSeven/DateTimePicker"];
-    
-//
-//    if([[DataForFMDB sharedDataBase] checkFavorite:@"girl" urlPath:@"http://gank.io/images/f4f6d68bf30147e1bdd4ddbc6ad7c2a2"])
-//        NSLog(@"存在");
-//    else
-//        NSLog(@"不存在");
-    
-//    self.dataArray = [db ]
-    
     [self initNavigationBar];
 
     [self initScroll];
@@ -101,7 +105,37 @@ static NSString * const WaterfullId = @"waterfull";
 
 
 #pragma mark -初始化
+- (void)initSideTabBar{
+    [self setUpChildViewController:@"Login" imageName:@"登录 (1)" selectImageName:@"登录"];
+    [self setUpChildViewController:@"Girl" imageName:@"美女 (1)" selectImageName:@"美女"];
+    [self setUpChildViewController:@"iOS" imageName:@"苹果 (1)" selectImageName:@"苹果"];
+    [self setUpChildViewController:@"Android" imageName:@"安卓 (1)" selectImageName:@"安卓"];
+    
+    self.tabBarController.selectedIndex = 0;
+    self.hidden = YES;
+    
+    [self.tabBarController setValue:nil forKeyPath:@"tabBar"];
+}
+
+- (void)initDataBase{
+        DataForFMDB *db = [DataForFMDB sharedDataBase];
+
+    //    [[DataForFMDB sharedDataBase] addFavorite:@"girl" urlPath:@"http://gank.io/images/f4f6d68bf30147e1bdd4ddbc6ad7c2a2"];
+    //    [[DataForFMDB sharedDataBase] addFavorite:@"ios" urlPath:@"https://github.com/pujiaxin33/JXPatternLock"];
+    //    [[DataForFMDB sharedDataBase] addFavorite:@"android" urlPath:@"https://github.com/loperSeven/DateTimePicker"];
+        
+    //
+    //    if([[DataForFMDB sharedDataBase] checkFavorite:@"girl" urlPath:@"http://gank.io/images/f4f6d68bf30147e1bdd4ddbc6ad7c2a2"])
+    //        NSLog(@"存在");
+    //    else
+    //        NSLog(@"不存在");
+        
+    //    self.dataArray = [db ]
+}
+
 - (void)initNavigationBar{
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
+    
     // title
     UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0, 20, 80, 40)];
     
@@ -111,29 +145,24 @@ static NSString * const WaterfullId = @"waterfull";
     
     self.navigationItem.titleView = label;
     
-    // left button
-    UIButton *Button = [UIButton buttonWithType:UIButtonTypeCustom];
+    //right button
+    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 30, 30)];
     
-    [Button setTitle: @"~⭐️~" forState: UIControlStateNormal];
+    UIButton *Button = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 30, 30)];
 
-    [Button setFrame:CGRectMake(10, 0, 40, 40)];
-    
-    [Button setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+    [Button setBackgroundImage:[UIImage imageNamed:@"收藏 (1)"] forState:UIControlStateNormal];
 
-    [Button setImage:[UIImage imageNamed:@"star.jpeg"] forState:UIControlStateHighlighted];
-    
-    Button.layer.cornerRadius = 40/2;  //设置按钮的拐角为宽的一半
-    Button.layer.masksToBounds = YES;// 这个属性很重要，把超出边框的部分去除
-    
     [Button addTarget:self action:@selector(popFavoriteView) forControlEvents:UIControlEventTouchUpInside];
     
-    UIBarButtonItem *leftItem = [[UIBarButtonItem alloc]initWithCustomView:Button];
-    
-    self.navigationItem.rightBarButtonItem = leftItem;
+    [view addSubview:Button];
+
+    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc]initWithCustomView:view];
+
+    self.navigationItem.rightBarButtonItem = rightItem;
 }
 
 - (void)initScroll{
-    self.scrollView = [[CycleBannerView alloc] initWithFrame:CGRectMake(0, 90, self.view.bounds.size.width, 400)];
+    self.scrollView = [[CycleBannerView alloc] initWithFrame:CGRectMake(0, 88, self.view.bounds.size.width, 400)];
     
     [self.view addSubview:self.scrollView];
     
@@ -443,5 +472,124 @@ static NSString * const WaterfullId = @"waterfull";
     [self.navigationController pushViewController:vc animated:YES];
 }
 
+
+#pragma mark -tabbar
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+}
+
+- (void)setUpChildViewController:(NSString *)title imageName:(NSString *)imageName selectImageName:(NSString *)selectImageName{
+//    self.view.backgroundColor = [UIColor colorWithRed:arc4random_uniform(255)/255.0 green:arc4random_uniform(255)/255.0 blue:arc4random_uniform(255)/255.0 alpha:1.0];
+//
+    
+    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 30, 25)];
+    
+    UIButton *Button = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 30, 25)];
+
+    [Button setBackgroundImage:[UIImage imageNamed:@"收起"] forState:UIControlStateNormal];
+
+    [Button addTarget:self action:@selector(tabHiddenOrShow) forControlEvents:UIControlEventTouchUpInside];
+    
+    [view addSubview:Button];
+
+    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc]initWithCustomView:view];
+
+    self.navigationItem.leftBarButtonItem = rightItem;
+
+    NSDictionary *dict = @{@"title":title,
+                           @"image":imageName,
+                           @"selectImage":selectImageName
+                           };
+    [self.tabItems addObject:dict];
+}
+
+- (void)tabHiddenOrShow{
+    [self.tabBarController.tabBar setHidden:YES];
+    self.hidden = !self.isHidden;
+    
+    if (self.lefeView == nil) {
+        self.lefeView = [[SideTabBarView alloc] initWithFrame:CGRectMake(-LEFT_WIDTH, 0, LEFT_WIDTH, [UIScreen mainScreen].bounds.size.height)];
+        self.lefeView.delegate = self;
+        self.lefeView.itemArray = self.tabItems;
+        [[UIApplication sharedApplication].keyWindow addSubview:self.lefeView];
+    }
+    if (self.bgView == nil) {
+        self.bgView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
+        self.bgView.backgroundColor = [UIColor colorWithWhite:0.3 alpha:0.5];
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapClick:)];
+        [self.bgView addGestureRecognizer:tap];
+    }
+    
+    CGRect leftFrame = self.lefeView.frame;
+    if (self.isHidden == YES) {
+        leftFrame.origin.x = -LEFT_WIDTH;
+        [self.bgView removeFromSuperview];
+    } else {
+        [[UIApplication sharedApplication].keyWindow insertSubview:self.bgView belowSubview:self.lefeView];
+        leftFrame.origin.x = 0;
+    }
+    [UIView animateWithDuration:0.5 animations:^{
+        self.lefeView.frame = leftFrame;
+        [self.view setNeedsLayout];
+    }];
+}
+
+- (void)tapClick:(UITapGestureRecognizer *)tap{
+    [self tabHiddenOrShow];
+}
+
+
+#pragma mark - SideTabBarViewDelegate
+-(void)didClickChildButton:(int)selectedIndex{
+    self.tabBarController.selectedIndex = selectedIndex;
+    [self tabHiddenOrShow];
+    
+    switch (selectedIndex) {
+        case 0:
+        {
+            UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"温馨提示" message:@"尚未开发，敬请期待" preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction * cancelAc = [UIAlertAction actionWithTitle:@"cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                NSLog(@"取消");
+            }];
+
+            [alertVC addAction:cancelAc];
+            [self presentViewController:alertVC animated:YES completion:nil];
+        }
+            break;
+        case 1:
+        {
+            [self popGirlView];
+        }
+            break;
+        case 2:
+        {
+            [self popGanhuoView];
+        }
+            break;
+        case 3:
+        {
+            [self popArticleView];
+        }
+            break;
+            
+        default:
+            break;
+    }
+}
+
+
+#pragma mark - set & get
+-(NSMutableArray *)tabItems{
+    if (_tabItems == nil) {
+        _tabItems = [NSMutableArray array];
+    }
+    return _tabItems;
+}
+
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
 
 @end

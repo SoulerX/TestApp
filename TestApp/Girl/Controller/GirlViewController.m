@@ -224,6 +224,11 @@
     
     GirlDetailViewController *detail = [[GirlDetailViewController alloc]init];
     
+    detail.passingValue = ^(void){
+       
+        [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath,nil] withRowAnimation:UITableViewRowAnimationNone];
+    };
+    
     detail.url = data.url;
     detail.title = data.title;
     detail.type = data.type;

@@ -15,9 +15,6 @@
 
 @interface FavoriteViewController ()
 
-@property(nonatomic, strong)NSMutableDictionary *countDict;
-@property(nonatomic, strong)UITableView *tableView;
-
 @end
 
 @implementation FavoriteViewController
@@ -27,36 +24,21 @@
     // Do any additional setup after loading the view from its nib.
     
     self.title = @"我的收藏";
-    
-    [self readData];
-    
+
     [self initButton];
-}
-
--(void)readData{
-    
-     [self.countDict setValue:@"1" forKey:@"girl"];
-
-     [self.countDict setValue:@"2" forKey:@"ios"];
-
-     [self.countDict setValue:@"3" forKey:@"android"];
 }
 
 -(void)initButton{
     
-    UIButton *button1 = [[UIButton alloc]initWithFrame:CGRectMake(20, 90+20, (self.view.bounds.size.width), (self.view.bounds.size.height-90-80)/3)];
+    UIButton *button1 = [[UIButton alloc]initWithFrame:CGRectMake(20, 90+20+50, (self.view.bounds.size.width), (self.view.bounds.size.height-90-80)/3)];
     [button1 setBackgroundImage: [UIImage imageNamed:@"girl.jpg"] forState:UIControlStateNormal];
     [button1 addTarget:self action:@selector(popGirlView) forControlEvents:UIControlEventTouchUpInside];
     
-    UILabel *label1 = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMinX(button1.frame), CGRectGetMaxY(button1.frame)+30, 100, 30)];
-    label1.text = self.countDict[@"girl"];
-    [self.view addSubview:label1];
-    
-    UIButton *button2 = [[UIButton alloc]initWithFrame:CGRectMake(20, (self.view.bounds.size.height-90-80)/3+90+100, (self.view.bounds.size.width), (self.view.bounds.size.height-90-80)/3)];
+    UIButton *button2 = [[UIButton alloc]initWithFrame:CGRectMake(20, (self.view.bounds.size.height-90-80)/3+90+100+50, (self.view.bounds.size.width), (self.view.bounds.size.height-90-80)/3)];
     [button2 setBackgroundImage: [UIImage imageNamed:@"ios.jpg"] forState:UIControlStateNormal];
     [button2 addTarget:self action:@selector(popIosView) forControlEvents:UIControlEventTouchUpInside];
     
-    UIButton *button3 = [[UIButton alloc]initWithFrame:CGRectMake(20, (self.view.bounds.size.height-90-80)*2/3+90+180, (self.view.bounds.size.width), (self.view.bounds.size.height-90-80)/3)];
+    UIButton *button3 = [[UIButton alloc]initWithFrame:CGRectMake(20, (self.view.bounds.size.height-90-80)*2/3+90+180+50, (self.view.bounds.size.width), (self.view.bounds.size.height-90-80)/3)];
     [button3 setBackgroundImage: [UIImage imageNamed:@"android.jpg"] forState:UIControlStateNormal];
     [button3 addTarget:self action:@selector(popAndroidView) forControlEvents:UIControlEventTouchUpInside];
 
@@ -75,11 +57,21 @@
 }
 
 -(void)popIosView{
-    
+    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"温馨提示" message:@"尚未开发，敬请期待" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction * cancelAc = [UIAlertAction actionWithTitle:@"cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        NSLog(@"取消");
+    }];
+    [alertVC addAction:cancelAc];
+    [self presentViewController:alertVC animated:YES completion:nil];
 }
 
 -(void)popAndroidView{
-    
+   UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"温馨提示" message:@"尚未开发，敬请期待" preferredStyle:UIAlertControllerStyleAlert];
+     UIAlertAction * cancelAc = [UIAlertAction actionWithTitle:@"cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+         NSLog(@"取消");
+     }];
+    [alertVC addAction:cancelAc];
+    [self presentViewController:alertVC animated:YES completion:nil];
 }
 
 

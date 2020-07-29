@@ -9,7 +9,11 @@
 #import <UIKit/UIKit.h>
 #import "ViewController.h"
 
+typedef void (^PassingValueBlock)(void);
+
 @interface GirlDetailViewController : UIViewController
+
+@property (nonatomic, copy) PassingValueBlock passingValue;
 
 @property (nonatomic, copy) NSString *type;
 @property (nonatomic, copy) NSString *url;

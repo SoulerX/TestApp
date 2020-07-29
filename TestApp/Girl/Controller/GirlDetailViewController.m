@@ -52,12 +52,16 @@
         NSLog(@"unlike");
         [self setLikeButton:@"dislike"];
         [[DataForFMDB sharedDataBase] deleteFavorite:self.type urlPath:self.url];
+        if([self.type isEqual:@"Girl"])
+            self.passingValue();
     }
     else
     {
         NSLog(@"like");
         [self setLikeButton:@"like"];
         [[DataForFMDB sharedDataBase] addFavorite:self.type urlPath:self.url title:self.title];
+        if([self.type isEqual:@"Girl"])
+            self.passingValue();
     }
     self.like = !self.like;
 }

@@ -7,7 +7,7 @@
 //
 
 #import "AppDelegate.h"
-#import "ViewController.h"
+#import "StartViewController.h"
 #import "DataForFMDB.h"
 
 @interface AppDelegate ()
@@ -23,9 +23,10 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.backgroundColor = [UIColor whiteColor];
 
-    //2.创建一个导航控制器并添加子视图
-    UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:[ViewController new]];
-
+    //2.创建一个导航控制器并添加子视图 隐藏导航栏
+    UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:[StartViewController new]];
+    [nav setNavigationBarHidden:YES animated:YES];
+    
     //3.设置根视图
     self.window.rootViewController = nav;
 
