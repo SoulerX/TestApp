@@ -187,7 +187,7 @@ static DataForFMDB *theData = nil;
     
     NSMutableArray *array = [NSMutableArray new];
     
-    FMResultSet *result = [fmdb executeQuery:@"select * from Girl"];
+    FMResultSet *result = [fmdb executeQuery:[NSString stringWithFormat:@"select * from '%@'",type]];
     
     while([result next]) {
         AddData *data = [[AddData alloc] init];

@@ -12,6 +12,8 @@
 #import "AndroidViewController.h"
 
 #import "FavoriteGirlViewController.h"
+#import "FavoriteIosViewController.h"
+#import "FavoriteAndroidViewController.h"
 
 @interface FavoriteViewController ()
 
@@ -57,21 +59,30 @@
 }
 
 -(void)popIosView{
-    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"温馨提示" message:@"尚未开发，敬请期待" preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction * cancelAc = [UIAlertAction actionWithTitle:@"cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-        NSLog(@"取消");
-    }];
-    [alertVC addAction:cancelAc];
-    [self presentViewController:alertVC animated:YES completion:nil];
+    
+    FavoriteIosViewController *vc = [FavoriteIosViewController new];
+    
+    [self.navigationController pushViewController:vc animated:YES];
+    
+//    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"温馨提示" message:@"尚未开发，敬请期待" preferredStyle:UIAlertControllerStyleAlert];
+//    UIAlertAction * cancelAc = [UIAlertAction actionWithTitle:@"cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+//        NSLog(@"取消");
+//    }];
+//    [alertVC addAction:cancelAc];
+//    [self presentViewController:alertVC animated:YES completion:nil];
 }
 
 -(void)popAndroidView{
-   UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"温馨提示" message:@"尚未开发，敬请期待" preferredStyle:UIAlertControllerStyleAlert];
-     UIAlertAction * cancelAc = [UIAlertAction actionWithTitle:@"cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-         NSLog(@"取消");
-     }];
-    [alertVC addAction:cancelAc];
-    [self presentViewController:alertVC animated:YES completion:nil];
+    FavoriteAndroidViewController *vc = [FavoriteAndroidViewController new];
+    
+    [self.navigationController pushViewController:vc animated:YES];
+    
+//   UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"温馨提示" message:@"尚未开发，敬请期待" preferredStyle:UIAlertControllerStyleAlert];
+//     UIAlertAction * cancelAc = [UIAlertAction actionWithTitle:@"cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+//         NSLog(@"取消");
+//     }];
+//    [alertVC addAction:cancelAc];
+//    [self presentViewController:alertVC animated:YES completion:nil];
 }
 
 

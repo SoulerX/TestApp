@@ -28,8 +28,6 @@
 @property (nonatomic , strong) NSMutableArray * _Nullable dataArray;
 
 - (void)loadData;
-+ (void)requestUrl:(NSString*_Nullable) strurl completionHandler:(nonnull void (^)(NSArray * _Nullable))completionHandler;
-
 - (void)initTableView;
 
 @end

@@ -479,9 +479,8 @@ static NSString * const WaterfullId = @"waterfull";
 }
 
 - (void)setUpChildViewController:(NSString *)title imageName:(NSString *)imageName selectImageName:(NSString *)selectImageName{
-//    self.view.backgroundColor = [UIColor colorWithRed:arc4random_uniform(255)/255.0 green:arc4random_uniform(255)/255.0 blue:arc4random_uniform(255)/255.0 alpha:1.0];
-//
-    
+    self.view.backgroundColor = [UIColor colorWithRed:arc4random_uniform(255)/255.0 green:arc4random_uniform(255)/255.0 blue:arc4random_uniform(255)/255.0 alpha:1.0];
+
     UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 30, 25)];
     
     UIButton *Button = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 30, 25)];
