@@ -98,12 +98,12 @@ static NSString * const WaterfullId = @"waterfull";
 - (void)loadNewGirls{
     self.page=1;
     
-    if (self.waterFulls.count > 0) {
+//    if (self.waterFulls.count > 0) {
         [self.waterFulls removeAllObjects];
-    }
+//    }
     
     NSMutableArray *dataarray = [[DataForFMDB sharedDataBase]getFavorite:@"Girl"];
-    
+    NSLog(@"dataarray.count:%ld",dataarray.count);
     for(int i=0;i<dataarray.count;i++){
         WaterFullData *data=[WaterFullData new];
 
@@ -116,7 +116,7 @@ static NSString * const WaterfullId = @"waterfull";
         
         [array addObject:add.url];
         
-        data.image=array;
+        data.images=array;
         data.url=add.url;
         data.title=add.title;
         data.h = self.h;

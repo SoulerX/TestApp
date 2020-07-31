@@ -17,6 +17,8 @@
 #import "GirlDetailViewController.h"
 #import "BaseEngine.h"
 #import "JZLoadingViewPacket.h"
+#import <NSObject+YYModel.h>
+
 
 @interface IosViewController ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -61,30 +63,37 @@
 - (void) loadData{
     [JZLoadingViewPacket showWithTitle:@"加载中" result:RequestLoading addToView:self.view];
     
+    NSTimer *timer = [NSTimer timerWithTimeInterval:6 target:self selector:@selector(popView) userInfo:nil repeats:YES];
+     
+    [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];
+    
     [BaseEngine requestUrl:[NSString stringWithFormat:@"https://gank.io/api/v2/data/category/GanHuo/type/iOS/page/%d/count/%d",self.page,self.count] completionHandler:^(NSArray * _Nullable dataarray) {
+        
+        [timer setFireDate:[NSDate distantFuture]];
         
         for(int i=0;i<dataarray.count;i++){
             
-            IosData *tempData = [IosData new];
-            
-            for(id key in dataarray[i]){
-                if([key isEqual:@"url"])
-                    tempData.url = dataarray[i][key];
-                else if([key isEqual:@"desc"])
-                    tempData.desc = dataarray[i][key];
-                else if([key isEqual:@"views"])
-                    tempData.views = [NSString stringWithFormat:@"%@",dataarray[i][key]];
-                else if([key isEqual:@"title"])
-                    tempData.title = dataarray[i][key];
-                else if([key isEqual:@"images"])
-                    tempData.images = dataarray[i][key];
-                else if([key isEqual:@"createdAt"])
-                    tempData.createdAt = dataarray[i][key];
-                else if([key isEqual:@"author"])
-                    tempData.author = dataarray[i][key];
-                else if([key isEqual:@"type"])
-                    tempData.type = dataarray[i][key];
-            }
+            IosData *tempData = [IosData yy_modelWithDictionary:dataarray[i]];
+//            IosData *tempData = [IosData new];
+//
+//            for(id key in dataarray[i]){
+//                if([key isEqual:@"url"])
+//                    tempData.url = dataarray[i][key];
+//                else if([key isEqual:@"desc"])
+//                    tempData.desc = dataarray[i][key];
+//                else if([key isEqual:@"views"])
+//                    tempData.views = [NSString stringWithFormat:@"%@",dataarray[i][key]];
+//                else if([key isEqual:@"title"])
+//                    tempData.title = dataarray[i][key];
+//                else if([key isEqual:@"images"])
+//                    tempData.images = dataarray[i][key];
+//                else if([key isEqual:@"createdAt"])
+//                    tempData.createdAt = dataarray[i][key];
+//                else if([key isEqual:@"author"])
+//                    tempData.author = dataarray[i][key];
+//                else if([key isEqual:@"type"])
+//                    tempData.type = dataarray[i][key];
+//            }
             
             [self.dataArray addObject:tempData];
         }
@@ -111,6 +120,10 @@
             });
         });
     }];
+}
+
+- (void)popView{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 

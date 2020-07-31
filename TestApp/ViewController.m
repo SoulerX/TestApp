@@ -33,6 +33,9 @@
 
 #import <MJRefresh.h>
 #import <MJExtension.h>
+#import <NSObject+YYModel.h>
+#import <AFNetworking.h>
+
 
 // 侧边栏的宽度
 #define LEFT_WIDTH 100
@@ -106,8 +109,8 @@ static NSString * const WaterfullId = @"waterfull";
 
 #pragma mark -初始化
 - (void)initSideTabBar{
-    [self setUpChildViewController:@"Login" imageName:@"登录 (1)" selectImageName:@"登录"];
-    [self setUpChildViewController:@"Girl" imageName:@"美女 (1)" selectImageName:@"美女"];
+    [self setUpChildViewController:@"Login" imageName:@"登录" selectImageName:@"登录 (1)"];
+    [self setUpChildViewController:@"Girl" imageName: @"美女" selectImageName:@"美女 (1)"];
     [self setUpChildViewController:@"iOS" imageName:@"苹果 (1)" selectImageName:@"苹果"];
     [self setUpChildViewController:@"Android" imageName:@"安卓 (1)" selectImageName:@"安卓"];
     
@@ -118,7 +121,7 @@ static NSString * const WaterfullId = @"waterfull";
 }
 
 - (void)initDataBase{
-        DataForFMDB *db = [DataForFMDB sharedDataBase];
+//        DataForFMDB *db = [DataForFMDB sharedDataBase];
 
     //    [[DataForFMDB sharedDataBase] addFavorite:@"girl" urlPath:@"http://gank.io/images/f4f6d68bf30147e1bdd4ddbc6ad7c2a2"];
     //    [[DataForFMDB sharedDataBase] addFavorite:@"ios" urlPath:@"https://github.com/pujiaxin33/JXPatternLock"];
@@ -162,7 +165,7 @@ static NSString * const WaterfullId = @"waterfull";
 }
 
 - (void)initScroll{
-    self.scrollView = [[CycleBannerView alloc] initWithFrame:CGRectMake(0, 88, self.view.bounds.size.width, 400)];
+    self.scrollView = [[CycleBannerView alloc] initWithFrame:CGRectMake(0, 88, self.view.bounds.size.width, 235)];
     
     [self.view addSubview:self.scrollView];
     
@@ -174,22 +177,7 @@ static NSString * const WaterfullId = @"waterfull";
         NSMutableArray *tempArray = [NSMutableArray new];
         
         for(int i=0;i<dataarray.count;i++){
-            CycleBannerData *data=[CycleBannerData new];
-            
-            for(id key in dataarray[i]){
-                if([key isEqual:@"image"])
-                {
-                    data.image=dataarray[i][key];
-                }
-                else if([key isEqual:@"title"])
-                {
-                    data.title=dataarray[i][key];
-                }
-                else if([key isEqual:@"url"])
-                {
-                    data.url=dataarray[i][key];
-                }
-            }
+            CycleBannerData *data =[CycleBannerData yy_modelWithDictionary:dataarray[i]];
             [tempArray addObject:data];
         }
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -202,7 +190,7 @@ static NSString * const WaterfullId = @"waterfull";
 
 - (void)initButton{
     
-    UILabel *ztLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 505, self.view.bounds.size.width - 10, 8)];
+    UILabel *ztLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(self.scrollView.frame)+15, self.view.bounds.size.width - 10, 8)];
     
     ztLabel.text = @"干货分类：";
     ztLabel.textColor = [UIColor grayColor];
@@ -214,7 +202,7 @@ static NSString * const WaterfullId = @"waterfull";
     [self.view addSubview:ztLabel];
     
     
-    UIButton *girlBtn = [[UIButton alloc]initWithFrame:CGRectMake(10, 525, (self.view.bounds.size.width-40)/3, 40)];
+    UIButton *girlBtn = [[UIButton alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(ztLabel.frame)+10, (self.view.bounds.size.width-40)/3, 40)];
     [girlBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [girlBtn setTitleColor:[UIColor redColor] forState:UIControlStateHighlighted];
     [girlBtn setBackgroundImage:[UIImage imageNamed:@"girl.jpg"] forState:UIControlStateNormal];
@@ -223,14 +211,14 @@ static NSString * const WaterfullId = @"waterfull";
     [girlBtn addTarget:self action:@selector(popGirlView) forControlEvents:UIControlEventTouchUpInside];
     
     
-    UIButton *ganhuoBtn = [[UIButton alloc]initWithFrame:CGRectMake((self.view.bounds.size.width-40)/3+20, 525, (self.view.bounds.size.width-40)/3, 40)];
+    UIButton *ganhuoBtn = [[UIButton alloc]initWithFrame:CGRectMake((self.view.bounds.size.width-40)/3+20, CGRectGetMaxY(ztLabel.frame)+10, (self.view.bounds.size.width-40)/3, 40)];
     [ganhuoBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [ganhuoBtn setBackgroundImage:[UIImage imageNamed:@"ios.jpg"] forState:UIControlStateNormal];
     ganhuoBtn.layer.borderWidth = 3;  // 边框的宽
     ganhuoBtn.layer.borderColor = [UIColor grayColor].CGColor;//边框的颜色
     [ganhuoBtn addTarget:self action:@selector(popGanhuoView) forControlEvents:UIControlEventTouchUpInside];
     
-    UIButton *articleBtn = [[UIButton alloc]initWithFrame:CGRectMake((self.view.bounds.size.width-40)*2/3+30, 525, (self.view.bounds.size.width-40)/3, 40)];
+    UIButton *articleBtn = [[UIButton alloc]initWithFrame:CGRectMake((self.view.bounds.size.width-40)*2/3+30, CGRectGetMaxY(ztLabel.frame)+10, (self.view.bounds.size.width-40)/3, 40)];
     [articleBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [articleBtn setBackgroundImage:[UIImage imageNamed:@"android.jpg"] forState:UIControlStateNormal];
     articleBtn.layer.borderWidth = 3;  // 边框的宽
@@ -249,7 +237,7 @@ static NSString * const WaterfullId = @"waterfull";
     waterFallLayout.delegate = self;
     
     // 创建collectionView
-    UICollectionView * collectionView = [[UICollectionView alloc]initWithFrame:CGRectMake(0, 580, self.view.bounds.size.width, 300) collectionViewLayout:waterFallLayout];
+    UICollectionView * collectionView = [[UICollectionView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.scrollView.frame)+90, self.view.bounds.size.width, self.view.bounds.size.height-(CGRectGetMaxY(self.scrollView.frame)+90)-20) collectionViewLayout:waterFallLayout];
     collectionView.backgroundColor = [UIColor whiteColor];
     
     collectionView.dataSource = self;
@@ -260,12 +248,6 @@ static NSString * const WaterfullId = @"waterfull";
     self.collectionView = collectionView;
     
     self.collectionView.delaysContentTouches = false;
-    
-//    UIButton *changebtn = [[UIButton alloc]initWithFrame:CGRectMake(self.view.bounds.size.width/2-5, 5, 10, 10)];
-//    [changebtn setBackgroundImage:[UIImage imageNamed:@"star.jpeg"] forState:UIControlStateNormal];
-//    [changebtn addTarget:self action:@selector(segmentClick) forControlEvents:UIControlEventTouchUpInside];
-    
-//    [collectionView addSubview:changebtn];
     
     [self.view addSubview:self.collectionView];
 
@@ -287,28 +269,19 @@ static NSString * const WaterfullId = @"waterfull";
 }
 
 - (void)loadNewGirls{
-    
     self.page=1;
+    
     if (self.waterFulls.count > 0) {
         [self.waterFulls removeAllObjects];
     }
+    
     [JZLoadingViewPacket showWithTitle:@"加载中" result:RequestLoading addToView:self.view];
 
     [BaseEngine requestUrl:[NSString stringWithFormat:@"https://gank.io/api/v2/data/category/Girl/type/Girl/page/%d/count/20",self.page] completionHandler:^(NSArray * _Nullable dataarray) {
 
         for(int i=0;i<dataarray.count;i++){
-            WaterFullData *data=[WaterFullData new];
+            WaterFullData *data=[WaterFullData yy_modelWithDictionary:dataarray[i]];
 
-            for(id key in dataarray[i]){
-                if([key isEqual:@"images"])
-                {
-                    data.image=dataarray[i][key];
-                }
-                else if([key isEqual:@"title"])
-                {
-                    data.title=dataarray[i][key];
-                }
-            }
             data.h = self.h;
             data.w = self.w;
 
@@ -340,6 +313,8 @@ static NSString * const WaterfullId = @"waterfull";
 - (void)loadMoreGirls{
 
     if(self.waterFulls.count>95){
+        [self.collectionView.mj_footer endRefreshing];
+        NSLog(@"到底了！！！");
         return;
     }
     else{
@@ -347,24 +322,10 @@ static NSString * const WaterfullId = @"waterfull";
     }
     
     [BaseEngine requestUrl:[NSString stringWithFormat:@"https://gank.io/api/v2/data/category/Girl/type/Girl/page/%d/count/20",self.page] completionHandler:^(NSArray * _Nullable dataarray) {
-        
+
         for(int i=0;i<dataarray.count;i++){
-            WaterFullData *data=[WaterFullData new];
-            
-            for(id key in dataarray[i]){
-                if([key isEqual:@"images"])
-                {
-                    data.image=dataarray[i][key];
-                }
-                else if([key isEqual:@"title"])
-                {
-                    data.title=dataarray[i][key];
-                }
-                else if([key isEqual:@"url"])
-                {
-                    data.url=dataarray[i][key];
-                }
-            }
+            WaterFullData *data=[WaterFullData yy_modelWithDictionary:dataarray[i]];
+
             data.h = self.h;
             data.w = self.w;
             
@@ -373,17 +334,18 @@ static NSString * const WaterfullId = @"waterfull";
         
         NSLog(@"self.waterFulls.count: %ld", self.waterFulls.count);
         
-        [self.collectionView.mj_header endRefreshing];
+        [self.collectionView.mj_footer endRefreshing];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.collectionView reloadData];
+            
         });
 
     }];
 }
 
 
-#pragma mark UICollectionViewDataSource
+#pragma mark -<UICollectionViewDataSource>
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
     return 1;
 }
@@ -405,6 +367,7 @@ static NSString * const WaterfullId = @"waterfull";
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+    NSLog(@"点击了");
     
     WaterFullData *data = self.waterFulls[indexPath.row];
     
@@ -417,7 +380,7 @@ static NSString * const WaterfullId = @"waterfull";
 }
 
 
-#pragma mark  - <WaterFallLayoutDelegate>
+#pragma mark  -<WaterFallLayoutDelegate>
 - (CGFloat)waterFallLayout:(WaterFallLayout *)waterFallLayout heightForItemAtIndexPath:(NSUInteger)indexPath itemWidth:(CGFloat)itemWidth{
     
     WaterFullData * waterfull = self.waterFulls[indexPath];
@@ -479,7 +442,10 @@ static NSString * const WaterfullId = @"waterfull";
 }
 
 - (void)setUpChildViewController:(NSString *)title imageName:(NSString *)imageName selectImageName:(NSString *)selectImageName{
-    self.view.backgroundColor = [UIColor colorWithRed:arc4random_uniform(255)/255.0 green:arc4random_uniform(255)/255.0 blue:arc4random_uniform(255)/255.0 alpha:1.0];
+    // 淡黄 0.996078 0.952941 0.466667 1
+    self.view.backgroundColor = [UIColor colorWithRed:0.996078 green:0.952941 blue:0.466667 alpha:1.0];
+    
+//    NSLog(@"%@",self.view.backgroundColor.CGColor);
 
     UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 30, 25)];
     
@@ -539,7 +505,7 @@ static NSString * const WaterfullId = @"waterfull";
 
 
 #pragma mark - SideTabBarViewDelegate
--(void)didClickChildButton:(int)selectedIndex{
+- (void)didClickChildButton:(int)selectedIndex{
     self.tabBarController.selectedIndex = selectedIndex;
     [self tabHiddenOrShow];
     
@@ -578,7 +544,7 @@ static NSString * const WaterfullId = @"waterfull";
 
 
 #pragma mark - set & get
--(NSMutableArray *)tabItems{
+- (NSMutableArray *)tabItems{
     if (_tabItems == nil) {
         _tabItems = [NSMutableArray array];
     }
@@ -589,6 +555,8 @@ static NSString * const WaterfullId = @"waterfull";
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+    
+    NSLog(@"炸了");
 }
 
 @end

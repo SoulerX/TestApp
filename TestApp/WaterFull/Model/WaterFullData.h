@@ -15,7 +15,7 @@
 /** 高度  */
 @property (nonatomic, assign) CGFloat h;
 /** 图片  */
-@property (nonatomic, copy) NSMutableArray *image;
+@property (nonatomic, copy) NSMutableArray *images;
 /** 标题  */
 @property (nonatomic, copy) NSString *title;
 /** url  */

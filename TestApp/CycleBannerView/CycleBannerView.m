@@ -17,6 +17,9 @@
 @property (nonatomic, strong) UIImageView *leftImageView;
 @property (nonatomic, strong) UIImageView *midImageView;
 @property (nonatomic, strong) UIImageView *rightImageView;
+@property (nonatomic, strong) UILabel *leftLabel;
+@property (nonatomic, strong) UILabel *midLabel;
+@property (nonatomic, strong) UILabel *rightLabel;
 
 @property (nonatomic, strong) NSTimer *timer;
 
@@ -25,6 +28,26 @@
 
 @implementation CycleBannerView
 
+- (UILabel *)leftLabel{
+    if(!_leftLabel){
+        _leftLabel = [UILabel new];
+    }
+    return _leftLabel;
+}
+
+- (UILabel *)rightLabel{
+    if(!_rightLabel){
+        _rightLabel = [UILabel new];
+    }
+    return _rightLabel;
+}
+
+- (UILabel *)midLabel{
+    if(!_midLabel){
+        _midLabel = [UILabel new];
+    }
+    return _midLabel;
+}
 
 - (UIScrollView *)mainScrollView
 {
@@ -33,8 +56,6 @@
         [_mainScrollView setPagingEnabled:YES];
         [_mainScrollView setDelegate:self];
     }
-    
-    
     
     return _mainScrollView;
 }
@@ -45,8 +66,6 @@
     if (!_leftImageView) {
         _leftImageView = [[UIImageView alloc] init];
     }
-    
-    
     
     return _leftImageView;
 }
@@ -77,18 +96,38 @@
     self = [super initWithFrame:frame];
     if (self) {
         
-        
         [self.mainScrollView setFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
+        [self.mainScrollView setBackgroundColor:[UIColor blackColor]];
         [self addSubview:self.mainScrollView];
         
-        [self.leftImageView setFrame:CGRectMake(0, 0, self.mainScrollView.bounds.size.width, self.mainScrollView.bounds.size.width)];
+        [self.leftImageView setFrame:CGRectMake(0, 0, self.mainScrollView.bounds.size.width, self.mainScrollView.bounds.size.height)];
+        [self.leftImageView setContentMode:UIViewContentModeScaleAspectFit];
+        [self.leftImageView setBackgroundColor:[UIColor blackColor]];
         [self.mainScrollView addSubview:self.leftImageView];
+        [self.leftLabel setFrame:CGRectMake(5, CGRectGetMaxY(self.leftImageView.frame)-20, self.leftImageView.frame.size.width-5, 15)];
+        [self.leftLabel setTextColor:[UIColor whiteColor]];
+        [self.leftImageView addSubview:self.leftLabel];
+      
         
-        [self.midImageView setFrame:CGRectMake(self.mainScrollView.bounds.size.width, 0, self.mainScrollView.bounds.size.width, self.mainScrollView.bounds.size.width)];
+        [self.midImageView setFrame:CGRectMake(self.mainScrollView.bounds.size.width, 0, self.mainScrollView.bounds.size.width, self.mainScrollView.bounds.size.height)];
+        [self.midImageView setContentMode:UIViewContentModeScaleAspectFit];
+        [self.midImageView setBackgroundColor:[UIColor blackColor]];
         [self.mainScrollView addSubview:self.midImageView];
+        [self.midLabel setFrame:CGRectMake(5, CGRectGetMaxY(self.midImageView.frame)-20, self.midImageView.frame.size.width-5, 15)];
+        [self.midLabel setTextColor:[UIColor whiteColor]];
+        [self.midImageView addSubview:self.midLabel];
+        self.midImageView.userInteractionEnabled=YES;
+        UITapGestureRecognizer *singleTap =[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(enter)];
+        [self.midImageView addGestureRecognizer:singleTap];
+
         
-        [self.rightImageView setFrame:CGRectMake(self.mainScrollView.bounds.size.width*2, 0, self.mainScrollView.bounds.size.width, self.mainScrollView.bounds.size.width)];
+        [self.rightImageView setFrame:CGRectMake(self.mainScrollView.bounds.size.width*2, 0, self.mainScrollView.bounds.size.width, self.mainScrollView.bounds.size.height)];
+        [self.rightImageView setContentMode:UIViewContentModeScaleAspectFit];
+        [self.rightImageView setBackgroundColor:[UIColor blackColor]];
         [self.mainScrollView addSubview:self.rightImageView];
+        [self.rightLabel setFrame:CGRectMake(5, CGRectGetMaxY(self.rightImageView.frame)-20, self.rightImageView.frame.size.width-5, 15)];
+        [self.rightLabel setTextColor:[UIColor whiteColor]];
+        [self.rightImageView addSubview:self.rightLabel];
         
         [self.mainScrollView setContentSize:CGSizeMake(CGRectGetWidth(self.mainScrollView.bounds)*3, CGRectGetHeight(self.mainScrollView.bounds))];
         [self scrollCenter];
@@ -144,6 +183,7 @@
         else
         {
             [self.mainScrollView setContentSize:CGSizeMake(self.mainScrollView.bounds.size.width, 0)];
+
         }
     }
 }
@@ -206,24 +246,43 @@
     CycleBannerData *data3 = [CycleBannerData new];
     data3 = self.imageArray[rightIndex];
     
-    [self.leftImageView sd_setImageWithURL:[NSURL URLWithString:data1.image] placeholderImage:[UIImage imageNamed:@"none.jpeg"]];
-    
-    
-    [self.midImageView sd_setImageWithURL:[NSURL URLWithString:data2.image] placeholderImage:[UIImage imageNamed:@"none.jpeg"]];
-    
-    
-    [self.rightImageView sd_setImageWithURL:[NSURL URLWithString:data3.image] placeholderImage:[UIImage imageNamed:@"none.jpeg"]];
 
+    [self.leftImageView sd_setImageWithURL:[NSURL URLWithString:data1.image] placeholderImage:[UIImage imageNamed:@"none.jpeg"]];
+    [self.leftLabel setText:data1.title];
+    [self.midImageView sd_setImageWithURL:[NSURL URLWithString:data2.image] placeholderImage:[UIImage imageNamed:@"none.jpeg"]];
+    [self.midLabel setText:data2.title];
+    [self.rightImageView sd_setImageWithURL:[NSURL URLWithString:data3.image] placeholderImage:[UIImage imageNamed:@"none.jpeg"]];
+    [self.rightLabel setText:data3.title];
     [self scrollCenter];
 }
 
 -(void)enter{
+    NSLog(@"点击了 %ld",self.index);
+    CycleBannerData *data =self.imageArray[self.index];
+    
+    GirlDetailViewController *vc = [GirlDetailViewController new];
+    
+    vc.url = data.url;
+    vc.title = data.title;
+    vc.type = nil;
+
+    [[self viewController].navigationController pushViewController:vc animated:YES];
     
     
-    NSLog(@"点击了");
-//    GirlDetailViewController *vc = [GirlDetailViewController new];
-//
-//    [self.navigationController pushViewController:vc animated:YES];
+    
+}
+
+//找到父类界面
+- (UIViewController *)viewController
+{
+    for (UIView* next = [self superview]; next; next = next.superview) {
+        UIResponder *nextResponder = [next nextResponder];
+        
+        if ([nextResponder isKindOfClass:[UIViewController class]]) {
+            return (UIViewController *)nextResponder;
+        }
+    }
+    return nil;
 }
 
 @end

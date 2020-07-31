@@ -16,7 +16,8 @@
 #import "MJRefresh.h"
 #import "BaseEngine.h"
 #import "JZLoadingViewPacket.h"
-
+#import <NSObject+YYModel.h>
+#import "AFNetworking.h"
 
 @interface GirlViewController ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -65,59 +66,38 @@
 - (void) loadData{
     [JZLoadingViewPacket showWithTitle:@"加载中" result:RequestLoading addToView:self.view];
     
+    NSTimer *timer = [NSTimer timerWithTimeInterval:6 target:self selector:@selector(popView) userInfo:nil repeats:YES];
+       
+    [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];
+
     [BaseEngine requestUrl:[NSString stringWithFormat:@"https://gank.io/api/v2/data/category/Girl/type/Girl/page/%d/count/%d",self.page,self.count] completionHandler:^(NSArray * _Nullable dataarray) {
         
+        [timer setFireDate:[NSDate distantFuture]];
+        
         for(int i=0;i<dataarray.count;i++){
-            
-            GirlData *tempData = [GirlData new];
-            
-            for(id key in dataarray[i]){
-                if([key isEqual:@"url"])
-                    tempData.url = dataarray[i][key];
-                else if([key isEqual:@"desc"])
-                    tempData.desc = dataarray[i][key];
-                else if([key isEqual:@"views"])
-                    tempData.views = [NSString stringWithFormat:@"%@",dataarray[i][key]];
-                else if([key isEqual:@"title"])
-                    tempData.title = dataarray[i][key];
-                else if([key isEqual:@"images"])
-                    tempData.images = dataarray[i][key];
-                else if([key isEqual:@"createdAt"])
-                    tempData.createdAt = dataarray[i][key];
-                else if([key isEqual:@"author"])
-                    tempData.author = dataarray[i][key];
-                else if([key isEqual:@"type"])
-                    tempData.type = dataarray[i][key];
-            }
-
+            GirlData *tempData = [GirlData yy_modelWithDictionary:dataarray[i]];
             [self.dataArray addObject:tempData];
         }
 
-      
-        
         // 等待主线程
         dispatch_async(dispatch_get_main_queue(), ^{
-            
             self.tableView.rowHeight = UITableViewAutomaticDimension;
-            //self.tableView.estimatedRowHeight=125;
-            
+
             NSLog(@"%ld",self.dataArray.count);
 
             [self.tableView reloadData];
             
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                /*
-                 手动隐藏时一定要调用此接口
-                 */
-                //        [[JZLoadingViewPacket shareInstance] jz_hide];
-                /*
-                 调用加载完毕的接口时（如 RequestSuccess，RequestFaild），则会立即显示，并且在1.5秒后自动消失
-                 */
                 [JZLoadingViewPacket showWithTitle:@"成功" result:RequestSuccess addToView:self.view];
             });
         });
     }];
 }
+
+- (void)popView{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
 
 // 初始化 tableview
 - (void) initTableView{

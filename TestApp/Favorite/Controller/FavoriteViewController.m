@@ -27,6 +27,8 @@
     
     self.title = @"我的收藏";
 
+    self.view.backgroundColor = [UIColor grayColor];
+    
     [self initButton];
 }
 

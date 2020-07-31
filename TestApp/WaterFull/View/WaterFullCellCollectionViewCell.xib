@@ -10,53 +10,70 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gTV-IL-0wX" customClass="WaterFullCellCollectionViewCell">
-            <rect key="frame" x="0.0" y="0.0" width="321" height="520"/>
+            <rect key="frame" x="0.0" y="0.0" width="225" height="451"/>
             <autoresizingMask key="autoresizingMask"/>
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                <rect key="frame" x="0.0" y="0.0" width="321" height="520"/>
+                <rect key="frame" x="0.0" y="0.0" width="225" height="451"/>
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
-                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Unh-7Y-To8">
-                        <rect key="frame" x="10" y="34" width="301" height="446"/>
-                    </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Xm-qQ-ywV">
-                        <rect key="frame" x="139.5" y="490" width="42" height="20"/>
+                        <rect key="frame" x="91.5" y="412" width="42" height="34"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Voq-X2-xn4">
-                        <rect key="frame" x="289" y="0.0" width="32" height="30"/>
-                        <state key="normal" image="networkFaild.png"/>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Unh-7Y-To8">
+                        <rect key="frame" x="10" y="69" width="205" height="333"/>
+                    </imageView>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NOY-Oh-T2x">
+                        <rect key="frame" x="200" y="49" width="17" height="20"/>
+                        <state key="normal" backgroundImage="dislike.png"/>
                     </button>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wfe-ZL-1iX">
+                        <rect key="frame" x="8" y="51" width="22" height="19"/>
+                        <state key="normal" backgroundImage="进入.png"/>
+                    </button>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="✨✨✨✨✨✨" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bRH-R8-rDL">
+                        <rect key="frame" x="43.5" y="46" width="138" height="20"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
             </view>
             <constraints>
-                <constraint firstItem="SEy-5g-ep8" firstAttribute="trailing" secondItem="Unh-7Y-To8" secondAttribute="trailing" constant="10" id="0Ho-dL-OEX"/>
-                <constraint firstItem="Voq-X2-xn4" firstAttribute="leading" secondItem="SEy-5g-ep8" secondAttribute="leading" constant="289" id="ANl-Bj-XP0"/>
-                <constraint firstItem="Unh-7Y-To8" firstAttribute="leading" secondItem="SEy-5g-ep8" secondAttribute="leading" constant="10" id="C9L-Be-pth"/>
-                <constraint firstItem="SEy-5g-ep8" firstAttribute="top" secondItem="Unh-7Y-To8" secondAttribute="top" constant="10" id="DO3-BH-nEI"/>
-                <constraint firstItem="SEy-5g-ep8" firstAttribute="bottom" relation="lessThanOrEqual" secondItem="6Xm-qQ-ywV" secondAttribute="bottom" constant="20" id="E1g-jp-KAV"/>
-                <constraint firstItem="6Xm-qQ-ywV" firstAttribute="top" secondItem="Unh-7Y-To8" secondAttribute="bottom" constant="10" id="Eib-dr-NMN"/>
-                <constraint firstItem="Voq-X2-xn4" firstAttribute="leading" secondItem="Unh-7Y-To8" secondAttribute="trailing" constant="-22" id="IZT-4F-NPT"/>
-                <constraint firstItem="SEy-5g-ep8" firstAttribute="trailing" secondItem="Voq-X2-xn4" secondAttribute="trailing" id="JUm-iL-UJo"/>
-                <constraint firstItem="SEy-5g-ep8" firstAttribute="bottom" secondItem="Voq-X2-xn4" secondAttribute="bottom" constant="490" id="PSJ-3H-uhB"/>
-                <constraint firstItem="Voq-X2-xn4" firstAttribute="leading" secondItem="Unh-7Y-To8" secondAttribute="trailing" constant="-22" id="fzn-5p-snY"/>
-                <constraint firstItem="SEy-5g-ep8" firstAttribute="top" secondItem="Voq-X2-xn4" secondAttribute="top" constant="44" id="jVl-Rw-Ckd"/>
-                <constraint firstItem="SEy-5g-ep8" firstAttribute="bottom" secondItem="Unh-7Y-To8" secondAttribute="bottom" constant="40" id="mxf-tw-zgG"/>
-                <constraint firstItem="6Xm-qQ-ywV" firstAttribute="centerX" secondItem="SEy-5g-ep8" secondAttribute="centerX" id="nDk-qP-goH"/>
+                <constraint firstItem="NOY-Oh-T2x" firstAttribute="leading" secondItem="Unh-7Y-To8" secondAttribute="trailing" constant="-15" id="08L-bI-ONP"/>
+                <constraint firstItem="6Xm-qQ-ywV" firstAttribute="centerX" secondItem="Unh-7Y-To8" secondAttribute="centerX" id="9cH-tp-DTU"/>
+                <constraint firstItem="bRH-R8-rDL" firstAttribute="top" secondItem="SEy-5g-ep8" secondAttribute="top" constant="2" id="EcA-Nj-zv9"/>
+                <constraint firstItem="Unh-7Y-To8" firstAttribute="top" secondItem="NOY-Oh-T2x" secondAttribute="bottom" id="ISa-lM-YTI"/>
+                <constraint firstItem="SEy-5g-ep8" firstAttribute="top" secondItem="NOY-Oh-T2x" secondAttribute="top" constant="-5" id="IxU-Xo-tTA"/>
+                <constraint firstItem="SEy-5g-ep8" firstAttribute="bottom" secondItem="6Xm-qQ-ywV" secondAttribute="bottom" constant="5" id="JD6-6H-Ql6"/>
+                <constraint firstItem="wfe-ZL-1iX" firstAttribute="leading" secondItem="SEy-5g-ep8" secondAttribute="leading" constant="8" id="Lav-AV-4mA"/>
+                <constraint firstItem="Unh-7Y-To8" firstAttribute="top" secondItem="SEy-5g-ep8" secondAttribute="top" constant="25" id="U2e-SZ-ycX"/>
+                <constraint firstItem="SEy-5g-ep8" firstAttribute="trailing" secondItem="Unh-7Y-To8" secondAttribute="trailing" constant="10" id="dFS-3O-6C4"/>
+                <constraint firstItem="Unh-7Y-To8" firstAttribute="leading" secondItem="wfe-ZL-1iX" secondAttribute="trailing" constant="-20" id="fJW-V0-EP4"/>
+                <constraint firstItem="6Xm-qQ-ywV" firstAttribute="top" secondItem="Unh-7Y-To8" secondAttribute="bottom" constant="10" id="gR8-y8-0eu"/>
+                <constraint firstItem="bRH-R8-rDL" firstAttribute="centerX" secondItem="SEy-5g-ep8" secondAttribute="centerX" id="kI3-Kh-nrS"/>
+                <constraint firstItem="Unh-7Y-To8" firstAttribute="top" secondItem="wfe-ZL-1iX" secondAttribute="bottom" constant="-1" id="pfM-dh-QRd"/>
+                <constraint firstItem="SEy-5g-ep8" firstAttribute="top" secondItem="wfe-ZL-1iX" secondAttribute="top" constant="-7" id="pzE-vI-tki"/>
+                <constraint firstItem="Unh-7Y-To8" firstAttribute="leading" secondItem="SEy-5g-ep8" secondAttribute="leading" constant="10" id="wzg-2Y-PJD"/>
+                <constraint firstItem="Unh-7Y-To8" firstAttribute="top" secondItem="bRH-R8-rDL" secondAttribute="bottom" constant="3" id="x0Q-9h-lE3"/>
+                <constraint firstItem="SEy-5g-ep8" firstAttribute="bottom" secondItem="Unh-7Y-To8" secondAttribute="bottom" constant="49" id="yru-pr-5yI"/>
+                <constraint firstItem="SEy-5g-ep8" firstAttribute="trailing" secondItem="NOY-Oh-T2x" secondAttribute="trailing" constant="8" id="zh2-JK-pzC"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="SEy-5g-ep8"/>
-            <size key="customSize" width="321" height="639"/>
+            <size key="customSize" width="225" height="570"/>
             <connections>
-                <outlet property="closeButton" destination="Voq-X2-xn4" id="KFk-lg-2nz"/>
+                <outlet property="closeButton" destination="NOY-Oh-T2x" id="ugh-q4-zLM"/>
+                <outlet property="enterButton" destination="wfe-ZL-1iX" id="cqX-97-xVW"/>
                 <outlet property="imageView" destination="Unh-7Y-To8" id="VR3-2V-6bJ"/>
                 <outlet property="titleLabel" destination="6Xm-qQ-ywV" id="QOu-h3-k5y"/>
             </connections>
-            <point key="canvasLocation" x="-507" y="13"/>
+            <point key="canvasLocation" x="-192.0289855072464" y="-102.79017857142857"/>
         </collectionViewCell>
     </objects>
     <resources>
-        <image name="networkFaild.png" width="70" height="70"/>
+        <image name="dislike.png" width="200" height="200"/>
+        <image name="进入.png" width="200" height="200"/>
     </resources>
 </document>

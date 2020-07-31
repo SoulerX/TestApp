@@ -26,6 +26,8 @@
         // 图片
         UIImageView *imageV = [[UIImageView alloc]init];
         imageV.frame = CGRectMake(8, 8, 120, 100);
+        [imageV setContentMode:UIViewContentModeScaleAspectFit];
+        [imageV setBackgroundColor:[UIColor blackColor]];
         [self.contentView addSubview:imageV];
         self.imgIcon = imageV;
 

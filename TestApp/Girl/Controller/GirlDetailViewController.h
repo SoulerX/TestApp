@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "ViewController.h"
+#import <WebKit/WebKit.h>
 
 typedef void (^PassingValueBlock)(void);
 
@@ -20,4 +21,5 @@ typedef void (^PassingValueBlock)(void);
 @property (nonatomic, copy) NSString *title;
 @property (nonatomic, assign) BOOL like;
 
+@property (nonatomic , strong)WKWebView *webView;
 @end
