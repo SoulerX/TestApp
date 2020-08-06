@@ -45,6 +45,11 @@ static NSString * const WaterfullId = @"waterfull";
 
 @implementation FavoriteGirlViewController
 
+- (void)dealloc{
+    self.collectionView.delegate = nil;
+    self.collectionView.dataSource = nil;
+}
+
 #pragma mark - 懒加载
 - (NSMutableArray *)waterFulls{
     if (!_waterFulls) {

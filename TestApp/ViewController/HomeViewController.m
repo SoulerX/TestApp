@@ -1,12 +1,12 @@
 //
-//  ViewController.m
+//  HomeViewController.m
 //  TestApp
 //
 //  Created by xuzhiwei on 2020/7/22.
 //  Copyright © 2020 netease. All rights reserved.
 //
 
-#import "ViewController.h"
+#import "HomeViewController.h"
 
 #import "SideTabBarView.h"
 
@@ -35,6 +35,7 @@
 #import <MJExtension.h>
 #import <NSObject+YYModel.h>
 #import <AFNetworking.h>
+#import <SDImageCache.h>
 
 
 // 侧边栏的宽度
@@ -42,7 +43,7 @@
 
 static NSString * const WaterfullId = @"waterfull";
 
-@interface ViewController ()<UICollectionViewDataSource, WaterFallLayoutDelegate, SideTabBarViewDelegate>
+@interface HomeViewController ()<UICollectionViewDataSource, WaterFallLayoutDelegate, SideTabBarViewDelegate>
 
 @property (nonatomic, retain) CycleBannerView *scrollView;
 
@@ -78,7 +79,23 @@ static NSString * const WaterfullId = @"waterfull";
 @end
 
 
-@implementation ViewController
+@implementation HomeViewController
+
+- (void)dealloc{
+    
+    [[SDImageCache sharedImageCache] clearMemory];
+    
+    self.collectionView.delegate = nil;
+    self.collectionView.dataSource = nil;
+    
+    self.scrollView = nil;
+    
+    self.lefeView.delegate = nil;
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
+}
+
 
 #pragma mark - 懒加载
 - (NSMutableArray *)waterFulls{
@@ -109,7 +126,7 @@ static NSString * const WaterfullId = @"waterfull";
 
 #pragma mark -初始化
 - (void)initSideTabBar{
-    [self setUpChildViewController:@"Login" imageName:@"登录" selectImageName:@"登录 (1)"];
+    [self setUpChildViewController:@"Logout" imageName:@"注销 (3)" selectImageName:@"注销 (2)"];
     [self setUpChildViewController:@"Girl" imageName: @"美女" selectImageName:@"美女 (1)"];
     [self setUpChildViewController:@"iOS" imageName:@"苹果 (1)" selectImageName:@"苹果"];
     [self setUpChildViewController:@"Android" imageName:@"安卓 (1)" selectImageName:@"安卓"];
@@ -121,19 +138,14 @@ static NSString * const WaterfullId = @"waterfull";
 }
 
 - (void)initDataBase{
-//        DataForFMDB *db = [DataForFMDB sharedDataBase];
+ 
+    [[DataForFMDB sharedDataBase]addAccount:@"123" passwordString:@"123" protectionString:@"123"];
 
-    //    [[DataForFMDB sharedDataBase] addFavorite:@"girl" urlPath:@"http://gank.io/images/f4f6d68bf30147e1bdd4ddbc6ad7c2a2"];
-    //    [[DataForFMDB sharedDataBase] addFavorite:@"ios" urlPath:@"https://github.com/pujiaxin33/JXPatternLock"];
-    //    [[DataForFMDB sharedDataBase] addFavorite:@"android" urlPath:@"https://github.com/loperSeven/DateTimePicker"];
-        
-    //
-    //    if([[DataForFMDB sharedDataBase] checkFavorite:@"girl" urlPath:@"http://gank.io/images/f4f6d68bf30147e1bdd4ddbc6ad7c2a2"])
-    //        NSLog(@"存在");
-    //    else
-    //        NSLog(@"不存在");
-        
-    //    self.dataArray = [db ]
+//    if([[DataForFMDB sharedDataBase]checkAccountExist:@"123"])
+//        ;
+
+//    if([[DataForFMDB sharedDataBase]checkAccountPassword:@"666" passwordString:@"111"])
+//        ;
 }
 
 - (void)initNavigationBar{
@@ -172,16 +184,20 @@ static NSString * const WaterfullId = @"waterfull";
     self.scrollView.indexBack = ^(NSInteger pageIndex) {
     };
     
+    
+    __weak typeof(self) weakSelf = self;
     [BaseEngine requestUrl:[NSString stringWithFormat:@"https://gank.io/api/v2/banners"] completionHandler:^(NSArray * _Nullable dataarray) {
        
         NSMutableArray *tempArray = [NSMutableArray new];
         
         for(int i=0;i<dataarray.count;i++){
+            @autoreleasepool {
+                           
             CycleBannerData *data =[CycleBannerData yy_modelWithDictionary:dataarray[i]];
-            [tempArray addObject:data];
+                [tempArray addObject:data];}
         }
         dispatch_async(dispatch_get_main_queue(), ^{
-            self.scrollView.imageArray = tempArray;
+            weakSelf.scrollView.imageArray = tempArray;
         });
     }];
     
@@ -208,6 +224,8 @@ static NSString * const WaterfullId = @"waterfull";
     [girlBtn setBackgroundImage:[UIImage imageNamed:@"girl.jpg"] forState:UIControlStateNormal];
     girlBtn.layer.borderWidth = 3;  // 边框的宽
     girlBtn.layer.borderColor = [UIColor grayColor].CGColor;//边框的颜色
+    girlBtn.layer.cornerRadius=5;
+    girlBtn.layer.masksToBounds = YES;
     [girlBtn addTarget:self action:@selector(popGirlView) forControlEvents:UIControlEventTouchUpInside];
     
     
@@ -216,6 +234,8 @@ static NSString * const WaterfullId = @"waterfull";
     [ganhuoBtn setBackgroundImage:[UIImage imageNamed:@"ios.jpg"] forState:UIControlStateNormal];
     ganhuoBtn.layer.borderWidth = 3;  // 边框的宽
     ganhuoBtn.layer.borderColor = [UIColor grayColor].CGColor;//边框的颜色
+    ganhuoBtn.layer.cornerRadius=10;
+    ganhuoBtn.layer.masksToBounds = YES;
     [ganhuoBtn addTarget:self action:@selector(popGanhuoView) forControlEvents:UIControlEventTouchUpInside];
     
     UIButton *articleBtn = [[UIButton alloc]initWithFrame:CGRectMake((self.view.bounds.size.width-40)*2/3+30, CGRectGetMaxY(ztLabel.frame)+10, (self.view.bounds.size.width-40)/3, 40)];
@@ -223,6 +243,8 @@ static NSString * const WaterfullId = @"waterfull";
     [articleBtn setBackgroundImage:[UIImage imageNamed:@"android.jpg"] forState:UIControlStateNormal];
     articleBtn.layer.borderWidth = 3;  // 边框的宽
     articleBtn.layer.borderColor = [UIColor grayColor].CGColor;//边框的颜色
+    articleBtn.layer.cornerRadius=5;
+    articleBtn.layer.masksToBounds = YES;
     [articleBtn addTarget:self action:@selector(popArticleView) forControlEvents:UIControlEventTouchUpInside];
     
     [self.view addSubview:girlBtn];
@@ -274,36 +296,37 @@ static NSString * const WaterfullId = @"waterfull";
     if (self.waterFulls.count > 0) {
         [self.waterFulls removeAllObjects];
     }
+    NSLog(@"clear------------->%ld",self.waterFulls.count);
     
     [JZLoadingViewPacket showWithTitle:@"加载中" result:RequestLoading addToView:self.view];
-
+    
+    __weak typeof(self) weakSelf = self;
     [BaseEngine requestUrl:[NSString stringWithFormat:@"https://gank.io/api/v2/data/category/Girl/type/Girl/page/%d/count/20",self.page] completionHandler:^(NSArray * _Nullable dataarray) {
 
         for(int i=0;i<dataarray.count;i++){
-            WaterFullData *data=[WaterFullData yy_modelWithDictionary:dataarray[i]];
-
-            data.h = self.h;
-            data.w = self.w;
-
-            [self.waterFulls addObject:data];
+            @autoreleasepool {
+                WaterFullData *data=[WaterFullData yy_modelWithDictionary:dataarray[i]];
+                
+                data.h = weakSelf.h;
+                data.w = weakSelf.w;
+                
+                [weakSelf.waterFulls addObject:data];
+            }
+           
         }
      
-        NSLog(@"self.waterFulls.count: %ld", self.waterFulls.count);
+        NSLog(@"self.waterFulls.count: %ld", weakSelf.waterFulls.count);
 
-        [self.collectionView.mj_header endRefreshing];
+        [weakSelf.collectionView.mj_header endRefreshing];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.collectionView reloadData];
+            [[SDImageCache sharedImageCache]clearMemory];
+            
+            [weakSelf.collectionView reloadData];
             
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                /*
-                 手动隐藏时一定要调用此接口
-                 */
-                //        [[JZLoadingViewPacket shareInstance] jz_hide];
-                /*
-                 调用加载完毕的接口时（如 RequestSuccess，RequestFaild），则会立即显示，并且在1.5秒后自动消失
-                 */
-                [JZLoadingViewPacket showWithTitle:@"成功" result:RequestSuccess addToView:self.view];
+                
+                [JZLoadingViewPacket showWithTitle:@"成功" result:RequestSuccess addToView:weakSelf.view];
             });
         });
     }];
@@ -321,23 +344,27 @@ static NSString * const WaterfullId = @"waterfull";
         self.page++;
     }
     
+    __weak typeof(self) weakSelf = self;
     [BaseEngine requestUrl:[NSString stringWithFormat:@"https://gank.io/api/v2/data/category/Girl/type/Girl/page/%d/count/20",self.page] completionHandler:^(NSArray * _Nullable dataarray) {
 
         for(int i=0;i<dataarray.count;i++){
+            @autoreleasepool {
             WaterFullData *data=[WaterFullData yy_modelWithDictionary:dataarray[i]];
 
-            data.h = self.h;
-            data.w = self.w;
+            data.h = weakSelf.h;
+            data.w = weakSelf.w;
             
-            [self.waterFulls addObject:data];
+            [weakSelf.waterFulls addObject:data];}
         }
         
-        NSLog(@"self.waterFulls.count: %ld", self.waterFulls.count);
+        NSLog(@"self.waterFulls.count: %ld", weakSelf.waterFulls.count);
         
-        [self.collectionView.mj_footer endRefreshing];
+        [weakSelf.collectionView.mj_footer endRefreshing];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.collectionView reloadData];
+            
+            
+            [weakSelf.collectionView reloadData];
             
         });
 
@@ -359,8 +386,9 @@ static NSString * const WaterfullId = @"waterfull";
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     
-    WaterFullCellCollectionViewCell * cell = [collectionView dequeueReusableCellWithReuseIdentifier:WaterfullId forIndexPath:indexPath];
     
+    WaterFullCellCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:WaterfullId forIndexPath:indexPath];
+
     cell.waterfull = self.waterFulls[indexPath.item];
     
     return cell;
@@ -369,23 +397,34 @@ static NSString * const WaterfullId = @"waterfull";
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     NSLog(@"点击了");
     
-    WaterFullData *data = self.waterFulls[indexPath.row];
-    
-    GirlDetailViewController *detail = [[GirlDetailViewController alloc]init];
-    
-    detail.url = data.url;
-    detail.title = data.title;
+    @autoreleasepool {
+        WaterFullData *data = self.waterFulls[indexPath.row];
         
-    [self.navigationController pushViewController:detail animated:YES];
+        GirlDetailViewController *detail = [[GirlDetailViewController alloc]init];
+        
+        detail.url = data.url;
+        detail.title = data.title;
+        
+        __weak typeof(self) weakSelf = self;
+        detail.passingValue = ^(void){
+            [weakSelf.collectionView reloadItemsAtIndexPaths:[NSArray arrayWithObjects:indexPath,nil]];
+        };
+        detail.type = @"Girl";
+            
+        [self.navigationController pushViewController:detail animated:YES];
+    }
 }
 
 
 #pragma mark  -<WaterFallLayoutDelegate>
 - (CGFloat)waterFallLayout:(WaterFallLayout *)waterFallLayout heightForItemAtIndexPath:(NSUInteger)indexPath itemWidth:(CGFloat)itemWidth{
     
-    WaterFullData * waterfull = self.waterFulls[indexPath];
-
-    return itemWidth * waterfull.h / waterfull.w;
+    
+//
+//    WaterFullData * waterfull = self.waterFulls[indexPath];
+////
+//    return itemWidth * waterfull.h / waterfull.w;
+    return itemWidth*5/3;
 }
 
 - (CGFloat)rowMarginInWaterFallLayout:(WaterFallLayout *)waterFallLayout{
@@ -431,10 +470,13 @@ static NSString * const WaterfullId = @"waterfull";
     
     AndroidViewController *vc = [AndroidViewController new];
         
- 
     [self.navigationController pushViewController:vc animated:YES];
 }
 
+- (void)logout{
+    [self.navigationController popViewControllerAnimated:YES];
+    [self.navigationController setNavigationBarHidden:YES];
+}
 
 #pragma mark -tabbar
 - (void)viewWillAppear:(BOOL)animated{
@@ -512,13 +554,8 @@ static NSString * const WaterfullId = @"waterfull";
     switch (selectedIndex) {
         case 0:
         {
-            UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"温馨提示" message:@"尚未开发，敬请期待" preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction * cancelAc = [UIAlertAction actionWithTitle:@"cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-                NSLog(@"取消");
-            }];
-
-            [alertVC addAction:cancelAc];
-            [self presentViewController:alertVC animated:YES completion:nil];
+            self.passingValue();
+            [self logout];
         }
             break;
         case 1:
@@ -558,5 +595,6 @@ static NSString * const WaterfullId = @"waterfull";
     
     NSLog(@"炸了");
 }
+
 
 @end

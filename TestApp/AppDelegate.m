@@ -25,6 +25,7 @@
 
     //2.创建一个导航控制器并添加子视图 隐藏导航栏
     UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:[StartViewController new]];
+    
     [nav setNavigationBarHidden:YES animated:YES];
     
     //3.设置根视图

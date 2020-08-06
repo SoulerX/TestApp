@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "IosData.h"
+#import <SDAnimatedImageView.h>
+#import <WebKit/WebKit.h>
 
 
 @interface IosTableViewCell : UITableViewCell
@@ -20,15 +22,15 @@
 /**
  *  图片1
  */
-@property (weak, nonatomic) UIImageView *imgIcon1;
+@property (weak, nonatomic) SDAnimatedImageView *imgIcon1;
 /**
  *  图片2
  */
-@property (weak, nonatomic) UIImageView *imgIcon2;
+@property (weak, nonatomic) SDAnimatedImageView *imgIcon2;
 /**
  *  图片3
  */
-@property (weak, nonatomic) UIImageView *imgIcon3;
+@property (weak, nonatomic) SDAnimatedImageView *imgIcon3;
 /**
  *  图片
  */

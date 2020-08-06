@@ -18,6 +18,7 @@
 #import "BaseEngine.h"
 #import "JZLoadingViewPacket.h"
 #import <NSObject+YYModel.h>
+#import <SDImageCache.h>
 
 @interface AndroidViewController ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -35,6 +36,12 @@
 @end
 
 @implementation AndroidViewController
+
+- (void)dealloc{
+    self.tableView.delegate = nil;
+    self.tableView.dataSource = nil;
+
+}
 
 // 懒加载
 - (NSMutableArray *) dataArray{
@@ -67,58 +74,32 @@
     NSTimer *timer = [NSTimer timerWithTimeInterval:6 target:self selector:@selector(popView) userInfo:nil repeats:YES];
     
     [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];
-    
+ 
+    __weak typeof(self) weakSelf = self;
     [BaseEngine requestUrl:[NSString stringWithFormat:@"https://gank.io/api/v2/data/category/GanHuo/type/Android/page/%d/count/%d",self.page,self.count] completionHandler:^(NSArray * _Nullable dataarray) {
         
         [timer setFireDate:[NSDate distantFuture]];
         
         for(int i=0;i<dataarray.count;i++){
-            
-            
             AndroidData *tempData = [AndroidData yy_modelWithDictionary:dataarray[i]];
-//            AndroidData *tempData = [AndroidData new];
-//
-//            for(id key in dataarray[i]){
-//                if([key isEqual:@"url"])
-//                    tempData.url = dataarray[i][key];
-//                else if([key isEqual:@"desc"])
-//                    tempData.desc = dataarray[i][key];
-//                else if([key isEqual:@"views"])
-//                    tempData.views = [NSString stringWithFormat:@"%@",dataarray[i][key]];
-//                else if([key isEqual:@"title"])
-//                    tempData.title = dataarray[i][key];
-//                else if([key isEqual:@"images"])
-//                    tempData.images = dataarray[i][key];
-//                else if([key isEqual:@"createdAt"])
-//                    tempData.createdAt = dataarray[i][key];
-//                else if([key isEqual:@"author"])
-//                    tempData.author = dataarray[i][key];
-//                else if([key isEqual:@"type"])
-//                    tempData.type = dataarray[i][key];
-//            }
             
-            [self.dataArray addObject:tempData];
+            [weakSelf.dataArray addObject:tempData];
         }
         
         
         // 等待主线程
         dispatch_async(dispatch_get_main_queue(), ^{
-            self.tableView.rowHeight = UITableViewAutomaticDimension;
+            weakSelf.tableView.rowHeight = UITableViewAutomaticDimension;
             //self.tableView.estimatedRowHeight=125;
             
-            NSLog(@"%ld",self.dataArray.count);
+            NSLog(@"%ld",weakSelf.dataArray.count);
 
-            [self.tableView reloadData];
+            [[SDImageCache sharedImageCache] clearMemory];
+            
+            [weakSelf.tableView reloadData];
             
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                /*
-                 手动隐藏时一定要调用此接口
-                 */
-                //        [[JZLoadingViewPacket shareInstance] jz_hide];
-                /*
-                 调用加载完毕的接口时（如 RequestSuccess，RequestFaild），则会立即显示，并且在1.5秒后自动消失
-                 */
-                [JZLoadingViewPacket showWithTitle:@"成功" result:RequestSuccess addToView:self.view];
+                [JZLoadingViewPacket showWithTitle:@"成功" result:RequestSuccess addToView:weakSelf.view];
             });
         });
     }];
@@ -210,7 +191,7 @@
     AndroidTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"AndroidCell"];
     
     if (cell == nil) {
-        cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"AndroidCell"];
+        cell = [[AndroidTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"AndroidCell"];
     }
     
     NSLog(@"indexPath.row:%ld",indexPath.row);

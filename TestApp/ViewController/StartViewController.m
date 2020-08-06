@@ -7,13 +7,14 @@
 //
 
 #import "StartViewController.h"
-#import "ViewController.h"
+#import "LoginViewController.h"
 
 @interface StartViewController ()
 
 @end
 
 @implementation StartViewController
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -25,15 +26,20 @@
     
     [self.view addSubview:view];
     
+    __weak typeof(self) weakSelf = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
-        [[self.view.subviews lastObject]removeFromSuperview];
-        
-        ViewController *vc = [ViewController new];
-        
-        [self.navigationController pushViewController:vc animated:YES];
+        [[weakSelf.view.subviews lastObject]removeFromSuperview];
+
+        [weakSelf.navigationController pushViewController:[LoginViewController new] animated:YES];
         
     });
+}
+
+- (void)dealloc
+{
+    NSLog(@"Controller dealloc = %@",NSStringFromClass([self class]));
+    [[NSNotificationCenter defaultCenter]removeObserver:self];
 }
 
 @end

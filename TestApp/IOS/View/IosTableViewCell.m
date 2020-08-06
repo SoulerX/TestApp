@@ -154,18 +154,42 @@
 - (void)setDataModel:(IosData *)dataModel{
     _dataModel = dataModel;
     
+//    if(self.dataModel.images.count>0)
+//        [self.imgIcon1 sd_setImageWithURL:[NSURL URLWithString:@"http://gank.io/images/f0c192e3e335400db8a709a07a891b2e"] placeholderImage:[UIImage imageNamed:@"none.jpeg"]];
+//    else
+//        [self.imgIcon1 setImage:[UIImage imageNamed:@"none.jpeg"]];
+//
+//    if(self.dataModel.images.count>1)
+//       [self.imgIcon2 sd_setImageWithURL:[NSURL URLWithString:@"http://gank.io/images/f0c192e3e335400db8a709a07a891b2e"] placeholderImage:[UIImage imageNamed:@"none.jpeg"]];
+//    else
+//       [self.imgIcon2 setImage:[UIImage imageNamed:@"none.jpeg"]];
+//
+//    if(self.dataModel.images.count>2)
+//       [self.imgIcon3 sd_setImageWithURL:[NSURL URLWithString:@"http://gank.io/images/f0c192e3e335400db8a709a07a891b2e"] placeholderImage:[UIImage imageNamed:@"none.jpeg"]];
+//    else
+//       [self.imgIcon3 setImage:[UIImage imageNamed:@"none.jpeg"]];
+    
     if(self.dataModel.images.count>0)
-        [self.imgIcon1 sd_setImageWithURL:[NSURL URLWithString:self.dataModel.images[0]] placeholderImage:[UIImage imageNamed:@"none.jpeg"]];
+    {
+        [self.imgIcon1 sd_setImageWithURL:[NSURL URLWithString:self.dataModel.images[0]]
+                         placeholderImage:[UIImage imageNamed:@"none.jpeg"]];
+       
+    }
+    
     else
         [self.imgIcon1 setImage:[UIImage imageNamed:@"none.jpeg"]];
-   
+    
     if(self.dataModel.images.count>1)
-       [self.imgIcon2 sd_setImageWithURL:[NSURL URLWithString:self.dataModel.images[1]] placeholderImage:[UIImage imageNamed:@"none.jpeg"]];
+    {[self.imgIcon2 sd_setImageWithURL:[NSURL URLWithString:self.dataModel.images[1]] placeholderImage:[UIImage imageNamed:@"none.jpeg"]];
+    
+    }
     else
        [self.imgIcon2 setImage:[UIImage imageNamed:@"none.jpeg"]];
 
     if(self.dataModel.images.count>2)
-       [self.imgIcon3 sd_setImageWithURL:[NSURL URLWithString:self.dataModel.images[2]] placeholderImage:[UIImage imageNamed:@"none.jpeg"]];
+    {[self.imgIcon3 sd_setImageWithURL:[NSURL URLWithString:self.dataModel.images[2]] placeholderImage:[UIImage imageNamed:@"none.jpeg"]];
+   
+    }
     else
        [self.imgIcon3 setImage:[UIImage imageNamed:@"none.jpeg"]];
     

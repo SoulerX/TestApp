@@ -38,20 +38,28 @@ static DataForFMDB *theData = nil;
         NSString *documentPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
         
         //文件路径
-        NSString *filePath = [documentPath stringByAppendingPathComponent:@"TestApp/Farorite.db"];
+        NSString *filePath = [documentPath stringByAppendingPathComponent:@"Farorite.db"];
         
         //实例化FMDataBase对象
         NSLog(@"---path:%@",filePath);
-        
-//        NSFileManager *fileManager = [NSFileManager defaultManager];
-        
-//        if(![fileManager fileExistsAtPath:filePath])
         
         fmdb = [FMDatabase databaseWithPath:filePath];
         
         if([fmdb open]) {
             
             //监测数据库中我要需要的表是否已经存在
+            NSString *existsSql = [NSString stringWithFormat:@"SELECT COUNT(*) count FROM sqlite_master where type='table' and name='account'"];
+            FMResultSet *rs = [fmdb executeQuery:existsSql];
+            if ([rs next]) {
+                NSInteger count = [rs intForColumn:@"count"];
+                if (count > 0) {
+                    NSLog(@"table:account 已经存在");
+                }
+                else{
+                    [self createAccountTable];
+                }
+            }
+            
             NSString *existsSql2 = [NSString stringWithFormat:@"SELECT COUNT(*) count FROM sqlite_master where type='table' and name='girl'"];
             FMResultSet *rs2 = [fmdb executeQuery:existsSql2];
             if ([rs2 next]) {
@@ -60,10 +68,10 @@ static DataForFMDB *theData = nil;
                     NSLog(@"table:girl 已经存在");
                 }
                 else{
-                    [self addGirlTable];
+                    [self createGirlTable];
                 }
             }
-          
+            
             NSString *existsSql3 = [NSString stringWithFormat:@"SELECT COUNT(*) count FROM sqlite_master where type='table' and name='ios'"];
             FMResultSet *rs3 = [fmdb executeQuery:existsSql3];
             if ([rs3 next]) {
@@ -72,7 +80,7 @@ static DataForFMDB *theData = nil;
                     NSLog(@"table:ios 已经存在");
                 }
                 else{
-                    [self addIosTable];
+                    [self createIosTable];
                 }
             }
             
@@ -84,10 +92,9 @@ static DataForFMDB *theData = nil;
                     NSLog(@"table:android 已经存在");
                 }
                 else{
-                    [self addAndroidTable];
+                    [self createAndroidTable];
                 }
             }
-            
             
             [fmdb close];
             NSLog(@"初始化成功");
@@ -97,7 +104,20 @@ static DataForFMDB *theData = nil;
     });
 }
 
--(void)addGirlTable{
+
+#pragma mark -create
+-(void)createAccountTable{
+    NSString *accountSQL =@"create table if not exists Account (account text, password text, protection text)";
+    BOOL accountSuccess = [fmdb executeUpdate:accountSQL];
+    if(!accountSuccess) {
+        NSLog(@"accountTable创建失败---%@",fmdb.lastErrorMessage);
+    }
+    else{
+        NSLog(@"accountTable创建成功");
+    }
+}
+
+-(void)createGirlTable{
     NSString *girlSQL =@"create table if not exists Girl (url text, title text)";
     BOOL girlSuccess = [fmdb executeUpdate:girlSQL];
     if(!girlSuccess) {
@@ -108,7 +128,7 @@ static DataForFMDB *theData = nil;
     }
 }
 
--(void)addIosTable{
+-(void)createIosTable{
     NSString *iosSQL =@"create table if not exists iOS (url text, title text)";
     BOOL iosSuccess = [fmdb executeUpdate:iosSQL];
     if(!iosSuccess) {
@@ -119,7 +139,7 @@ static DataForFMDB *theData = nil;
     }
 }
 
--(void)addAndroidTable{
+-(void)createAndroidTable{
     NSString *androidSQL =@"create table if not exists Android (url text, title text)";
     BOOL androidSuccess = [fmdb executeUpdate:androidSQL];
     if(!androidSuccess) {
@@ -130,6 +150,8 @@ static DataForFMDB *theData = nil;
     }
 }
 
+
+#pragma mark -add/delete/check/get
 -(void)addFavorite:(NSString*)ftype urlPath:(NSString*)url title:(NSString *)title{
     [fmdb open];
     NSLog(@"%@   %@",ftype, url);
@@ -201,6 +223,97 @@ static DataForFMDB *theData = nil;
     [fmdb close];
     
     return array;
+}
+
+
+#pragma mark -login&register
+-(int)addAccount:(NSString*)account passwordString:(NSString*)password protectionString:(NSString *)protection{
+    if([self checkAccountExist:account] == YES){
+        return 0;
+    }
+    
+    [fmdb open];
+    
+    NSString *SQL = [NSString stringWithFormat:@"INSERT INTO 'Account'(account, password, protection) VALUES('%@', '%@', '%@');", account, password, protection];
+    
+    BOOL isAddSuccess = [fmdb executeUpdate:SQL];
+    
+    if(!isAddSuccess) {
+        NSLog(@"accoount--Table插入信息失败--%@",  fmdb.lastErrorMessage);
+        NSLog(@"%@   %@   %@",account, password, protection);
+        [fmdb close];
+        return -1;
+    }
+    else{
+        NSLog(@"account--Table插入信息成功--%@ %@ %@", account, password, protection);
+        [fmdb close];
+        return 1;
+    }
+
+}
+
+-(BOOL)checkAccountExist:(NSString*)account{
+    [fmdb open];
+
+    FMResultSet *rs =[fmdb executeQuery:[NSString stringWithFormat: @"SELECT account FROM Account"]];
+    
+    while([rs next])
+    {
+        if([[rs stringForColumn:@"account"] isEqualToString:account])
+        {
+            NSLog(@"存在账户:%@",account);
+            [fmdb close];
+            return YES;
+        }
+    }
+    NSLog(@"不存在账户:%@",account);
+    [fmdb close];
+    return NO;
+}
+
+-(BOOL)checkAccountPassword:(NSString*)account passwordString:(NSString*)password{
+    [fmdb open];
+
+    FMResultSet *rs =[fmdb executeQuery:[NSString stringWithFormat: @"SELECT password FROM Account WHERE account='%@'", account]];
+    
+    while([rs next]){
+        NSLog(@"账号存在");
+        if([password isEqualToString:[rs stringForColumn:@"password"]])
+        {
+            NSLog(@"登录成功");
+            [fmdb close];
+            return YES;
+        }
+        NSLog(@"密码错误");
+        [fmdb close];
+        return NO;
+    }
+    NSLog(@"账号不存在");
+    [fmdb close];
+    return NO;
+}
+
+-(NSString*)backAccountPassword:(NSString*)account protectionString:(NSString*)protection{
+    [fmdb open];
+
+    FMResultSet *rs =[fmdb executeQuery:[NSString stringWithFormat: @"SELECT protection,password FROM Account WHERE account='%@'", account]];
+    
+    while([rs next]){
+        NSLog(@"账号存在");
+        if([protection isEqualToString:[rs stringForColumn:@"protection"]])
+        {
+            NSString *str =[rs stringForColumn:@"password"];
+            NSLog(@"找回密码:%@",str);
+            [fmdb close];
+            return str;
+        }
+        NSLog(@"密保错误");
+        [fmdb close];
+        return nil;
+    }
+    NSLog(@"账号不存在");
+    [fmdb close];
+    return nil;
 }
 
 @end

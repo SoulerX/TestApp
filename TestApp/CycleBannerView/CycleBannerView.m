@@ -28,6 +28,11 @@
 
 @implementation CycleBannerView
 
+- (void)dealloc{
+    self.mainScrollView.delegate = nil;
+ 
+}
+
 - (UILabel *)leftLabel{
     if(!_leftLabel){
         _leftLabel = [UILabel new];

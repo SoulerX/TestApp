@@ -11,10 +11,11 @@
 #import "UIImageView+WebCache.h"
 #import "GirlDetailViewController.h"
 #import "DataForFMDB.h"
+#import <SDAnimatedImageView.h>
 
 @interface WaterFullCellCollectionViewCell()
 
-@property (weak, nonatomic) IBOutlet UIImageView *imageView;
+@property (weak, nonatomic) IBOutlet SDAnimatedImageView *imageView;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UIButton *closeButton;
 @property (weak, nonatomic) IBOutlet UIButton *enterButton;

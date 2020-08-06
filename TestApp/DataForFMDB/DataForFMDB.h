@@ -18,6 +18,11 @@
 -(BOOL)checkFavorite:(NSString*)type urlPath:(NSString*)url;
 -(NSMutableArray*)getFavorite:(NSString*)type;
 
+-(int)addAccount:(NSString*)account passwordString:(NSString*)password protectionString:(NSString *)protection;
+-(BOOL)checkAccountPassword:(NSString*)account passwordString:(NSString*)password;
+-(BOOL)checkAccountExist:(NSString*)account;
+-(NSString*)backAccountPassword:(NSString*)account protectionString:(NSString*)protection;
+
 @end
 
 

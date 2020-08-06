@@ -33,6 +33,12 @@
 
 @implementation FavoriteAndroidViewController
 
+- (void)dealloc{
+    self.tableView.delegate = nil;
+    self.tableView.dataSource = nil;
+
+}
+
 // 懒加载
 - (NSMutableArray *) dataArray{
     if (!_dataArray) {

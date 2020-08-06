@@ -58,17 +58,14 @@ static id _instance;
 + (void) requestUrl:(NSString*) strurl completionHandler:(nonnull void (^)(NSArray * _Nullable))completionHandler{
     
     NSMutableURLRequest *request = [NSMutableURLRequest new];
-    
     [request setURL:[NSURL URLWithString:strurl]];
     [request setHTTPMethod:@"GET"];
     
     NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
-    
     [[session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        
-        if(!data)
+        if(!data||error)
         {
-            return;
+             return;
         }
 
         id result = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
@@ -83,13 +80,13 @@ static id _instance;
 
 + (void)getUrl:(NSString*)strUrl{
 //    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-//    
+//
 //    [manager GET:strUrl parameters:nil headers:nil progress:nil success:^(AFHTTPSessionManager *operation, id responseObject){
 //        NSLog(@"");
 //    } failure:^(AFHTTPSessionManager  *operation, NSError *error){
 //        NSLog(@"请求失败------------->%@",error);
 //    }];
-//    
+//
 }
 
 @end

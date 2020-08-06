@@ -18,6 +18,7 @@
 #import "JZLoadingViewPacket.h"
 #import <NSObject+YYModel.h>
 #import "AFNetworking.h"
+#import <SDImageCache.h>
 
 @interface GirlViewController ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -36,6 +37,11 @@
 
 @implementation GirlViewController
 
+- (void)dealloc{
+    self.tableView.delegate = nil;
+    self.tableView.dataSource = nil;
+}
+
 // 懒加载
 - (NSMutableArray *) dataArray{
     if (!_dataArray) {
@@ -47,8 +53,7 @@
 // 入口
 - (void) viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
-    
+
     self.page = 1;
     
     self.count = 10;
@@ -58,8 +63,6 @@
     [self addTopButton];
     
     [self initTableView];
-    
-
 }
 
 #pragma mark- 加载数据
@@ -69,32 +72,35 @@
     NSTimer *timer = [NSTimer timerWithTimeInterval:6 target:self selector:@selector(popView) userInfo:nil repeats:YES];
        
     [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];
-
+    
+    __weak typeof(self) weakSelf = self;
     [BaseEngine requestUrl:[NSString stringWithFormat:@"https://gank.io/api/v2/data/category/Girl/type/Girl/page/%d/count/%d",self.page,self.count] completionHandler:^(NSArray * _Nullable dataarray) {
         
         [timer setFireDate:[NSDate distantFuture]];
         
         for(int i=0;i<dataarray.count;i++){
             GirlData *tempData = [GirlData yy_modelWithDictionary:dataarray[i]];
-            [self.dataArray addObject:tempData];
+            [weakSelf.dataArray addObject:tempData];
         }
 
         // 等待主线程
         dispatch_async(dispatch_get_main_queue(), ^{
-            self.tableView.rowHeight = UITableViewAutomaticDimension;
+            weakSelf.tableView.rowHeight = UITableViewAutomaticDimension;
 
-            NSLog(@"%ld",self.dataArray.count);
+            NSLog(@"%ld",weakSelf.dataArray.count);
 
-            [self.tableView reloadData];
+            [[SDImageCache sharedImageCache] clearMemory];
+            
+            [weakSelf.tableView reloadData];
             
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [JZLoadingViewPacket showWithTitle:@"成功" result:RequestSuccess addToView:self.view];
+                [JZLoadingViewPacket showWithTitle:@"成功" result:RequestSuccess addToView:weakSelf.view];
             });
         });
     }];
 }
 
-- (void)popView{
+- (void) popView{
     [self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -106,7 +112,6 @@
     tableview.delegate = self;
     tableview.dataSource = self;
     
-    
     [self.view addSubview:tableview];
     
     self.tableView = tableview;
@@ -116,7 +121,6 @@
     UIImageView *imageview = [[UIImageView alloc]initWithFrame:CGRectMake(0, 89, self.view.bounds.size.width+40, self.view.bounds.size.width*0.4)];
     
     [imageview  setImage:[UIImage imageNamed:@"girl.jpg"]];
-
 
     [self.view addSubview:imageview];
     
@@ -135,7 +139,7 @@
 }
 
 // 头部的下拉刷新触发事件
-- (void)headerClick {
+- (void) headerClick {
     // 可在此处实现下拉刷新时要执行的代码
     // ......
     
@@ -154,7 +158,7 @@
 }
 
 // 底部的上拉加载触发事件
-- (void)footerClick {
+- (void) footerClick {
     // 可在此处实现上拉加载时要执行的代码
     // ......
     
@@ -181,7 +185,7 @@
     GirlTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"GirlCell"];
     
     if (cell == nil) {
-        cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"GirlCell"];
+        cell = [[GirlTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"GirlCell"];
     }
     
     NSLog(@"indexPath.row:%ld",indexPath.row);
@@ -203,7 +207,6 @@
     GirlDetailViewController *detail = [[GirlDetailViewController alloc]init];
     
     detail.passingValue = ^(void){
-       
         [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath,nil] withRowAnimation:UITableViewRowAnimationNone];
     };
     
@@ -250,14 +253,7 @@
 - (void) toTop{
     NSLog(@"置顶");
 
-    //置顶方法一
     [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
-
-
-    //置顶方法二
-//    [self.tableview setContentOffset:CGPointMake(0, 0) animated:YES];
-    
-//    [[self.view.subviews lastObject]removeFromSuperview];
 }
 
 // 设置图片透明度 CGFloat/透明度  UIImage/图片   return/UIImage
