@@ -112,7 +112,33 @@
 
 // 初始化 tableview
 - (void) initTableView{
-    UITableView *tableview = [[UITableView alloc]initWithFrame:CGRectMake(5, 250, self.view.bounds.size.width+30, self.view.bounds.size.height+20)];
+    extern NSString *currentPlatform;
+    
+    CGFloat x;
+    CGFloat y;
+    CGFloat w;
+    CGFloat h;
+    
+    if([currentPlatform isEqualToString:@"x86_64"]||[currentPlatform isEqualToString:@"iPhone9,1"])
+    {
+        x=0;
+        y=54;
+        w=[UIScreen mainScreen].bounds.size.width;
+        h=[UIScreen mainScreen].bounds.size.height-54;
+    }else{
+        x=0;
+        y=88;
+        w=[UIScreen mainScreen].bounds.size.width;
+        h=[UIScreen mainScreen].bounds.size.height-88;
+    }
+    
+    UIImageView *imageview = [[UIImageView alloc]initWithFrame:CGRectMake(0, y, w+10, (w+10)*0.55)];
+    
+    [imageview  setImage:[UIImage imageNamed:@"android.jpg"]];
+    
+    [self.view addSubview:imageview];
+    
+    UITableView *tableview= [[UITableView alloc]initWithFrame:CGRectMake(x, y+(w+10)*0.55, w, h-(w+10)*0.55)];
     
     tableview.delegate = self;
     tableview.dataSource = self;
@@ -124,11 +150,6 @@
     
     [self.tableView registerClass:[AndroidTableViewCell class] forCellReuseIdentifier:@"AndroidCell"];
     
-    UIImageView *imageview = [[UIImageView alloc]initWithFrame:CGRectMake(0, 89, self.view.bounds.size.width+40, self.view.bounds.size.width*0.4)];
-    
-    [imageview  setImage:[UIImage imageNamed:@"android.jpg"]];
-
-    [self.view addSubview:imageview];
     
     // 添加头部的下拉刷新
     MJRefreshNormalHeader *header = [[MJRefreshNormalHeader alloc] init];

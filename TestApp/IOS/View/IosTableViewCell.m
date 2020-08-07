@@ -48,7 +48,7 @@
         UIImageView *imageV = [[UIImageView alloc]init];
         imageV.frame = CGRectMake(10, 30, (SCREEN_WIDTH-40)/3, (SCREEN_WIDTH-40)/3*0.8);
         [imageV setContentMode:UIViewContentModeScaleAspectFit];
-        [imageV setBackgroundColor:[UIColor blackColor]];
+        [imageV setBackgroundColor:[UIColor whiteColor]];
         [self.contentView addSubview:imageV];
         self.imgIcon1 = imageV;
         
@@ -56,7 +56,7 @@
         UIImageView *imageV2 = [[UIImageView alloc]init];
         imageV2.frame = CGRectMake(20+(SCREEN_WIDTH-40)/3, 30, (SCREEN_WIDTH-40)/3, (SCREEN_WIDTH-40)/3*0.8);
         [imageV2 setContentMode:UIViewContentModeScaleAspectFit];
-        [imageV2 setBackgroundColor:[UIColor blackColor]];
+        [imageV2 setBackgroundColor:[UIColor whiteColor]];
         [self.contentView addSubview:imageV2];
         self.imgIcon2 = imageV2;
 
@@ -64,7 +64,7 @@
         UIImageView *imageV3 = [[UIImageView alloc]init];
         imageV3.frame = CGRectMake(30+(SCREEN_WIDTH-40)*2/3, 30, (SCREEN_WIDTH-40)/3, (SCREEN_WIDTH-40)/3*0.8);
         [imageV3 setContentMode:UIViewContentModeScaleAspectFit];
-        [imageV3 setBackgroundColor:[UIColor blackColor]];
+        [imageV3 setBackgroundColor:[UIColor whiteColor]];
         [self.contentView addSubview:imageV3];
         self.imgIcon3 = imageV3;
 

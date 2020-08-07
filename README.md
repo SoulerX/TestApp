@@ -1,3 +1,7 @@
 # TestApp
 
-第一次自己写demo，主要是实现MVC的软件设计模式，使用FMDB数据库，cocoapods第三方库，以及github代码管理
+Demo主要是实现MVC的软件设计模式，HTTP请求URL地址获取json数据，使用FMDB进行数据库管理，cocoapods第三方库管理，以及github代码管理
+
+更新记录
+
+2020.8.7——机型适配 iPhone11 & iPhone7

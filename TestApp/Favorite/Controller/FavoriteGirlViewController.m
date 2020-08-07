@@ -74,8 +74,30 @@ static NSString * const WaterfullId = @"waterfull";
     WaterFallLayout * waterFallLayout = [[WaterFallLayout alloc]init];
     waterFallLayout.delegate = self;
     
+    extern NSString *currentPlatform;
+    
+    CGFloat x;
+    CGFloat y;
+    CGFloat w;
+    CGFloat h;
+    
+    if([currentPlatform isEqualToString:@"x86_64"]||[currentPlatform isEqualToString:@"iPhone9,1"])
+    {
+        x=5;
+        y=54;
+        w=[UIScreen mainScreen].bounds.size.width-10;
+        h=[UIScreen mainScreen].bounds.size.height-54;
+    }else{
+        x=5;
+        y=88;
+        w=[UIScreen mainScreen].bounds.size.width-10;
+        h=[UIScreen mainScreen].bounds.size.height-88;
+    }
+    
+  
+    
     // 创建collectionView
-    UICollectionView * collectionView = [[UICollectionView alloc]initWithFrame:CGRectMake(-5, 89, self.view.bounds.size.width+50, 800) collectionViewLayout:waterFallLayout];
+    UICollectionView * collectionView = [[UICollectionView alloc]initWithFrame: CGRectMake(x, y, w, h) collectionViewLayout:waterFallLayout];
     collectionView.backgroundColor = [UIColor whiteColor];
     
     collectionView.dataSource = self;

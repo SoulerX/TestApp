@@ -104,7 +104,27 @@
 }
 
 - (void) initTableView{
-    UITableView *tableview = [[UITableView alloc]initWithFrame:CGRectMake(0, 88, self.view.bounds.size.width+30, self.view.bounds.size.height-88)];
+    extern NSString *currentPlatform;
+    
+    CGFloat x;
+    CGFloat y;
+    CGFloat w;
+    CGFloat h;
+    
+    if([currentPlatform isEqualToString:@"x86_64"]||[currentPlatform isEqualToString:@"iPhone9,1"])
+    {
+        x=5;
+        y=54;
+        w=[UIScreen mainScreen].bounds.size.width-10;
+        h=[UIScreen mainScreen].bounds.size.height-54;
+    }else{
+        x=5;
+        y=88;
+        w=[UIScreen mainScreen].bounds.size.width-10;
+        h=[UIScreen mainScreen].bounds.size.height-88;
+    }
+    
+    UITableView *tableview = [[UITableView alloc]initWithFrame:CGRectMake(x,y,w,h)];
     
     tableview.delegate = self;
     tableview.dataSource = self;

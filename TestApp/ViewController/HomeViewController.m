@@ -37,11 +37,16 @@
 #import <AFNetworking.h>
 #import <SDImageCache.h>
 
+#import <sys/utsname.h>
+
+
 
 // 侧边栏的宽度
 #define LEFT_WIDTH 100
 
 static NSString * const WaterfullId = @"waterfull";
+
+NSString * currentPlatform;
 
 @interface HomeViewController ()<UICollectionViewDataSource, WaterFallLayoutDelegate, SideTabBarViewDelegate>
 
@@ -108,6 +113,8 @@ static NSString * const WaterfullId = @"waterfull";
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    [self initPlatForm];
+    
 //    [self initDataBase];
     
     [self initSideTabBar];
@@ -125,6 +132,18 @@ static NSString * const WaterfullId = @"waterfull";
 
 
 #pragma mark -初始化
+- (void)initPlatForm{
+    struct utsname systemInfo;
+    
+    uname(&systemInfo);
+    
+    NSString * platform = [NSString stringWithCString:systemInfo.machine encoding:NSASCIIStringEncoding];
+    
+    NSLog(@"当前设备机型------------------>%@", platform);
+    
+    currentPlatform = platform;
+}
+
 - (void)initSideTabBar{
     [self setUpChildViewController:@"Logout" imageName:@"注销 (3)" selectImageName:@"注销 (2)"];
     [self setUpChildViewController:@"Girl" imageName: @"美女" selectImageName:@"美女 (1)"];
@@ -177,7 +196,15 @@ static NSString * const WaterfullId = @"waterfull";
 }
 
 - (void)initScroll{
-    self.scrollView = [[CycleBannerView alloc] initWithFrame:CGRectMake(0, 88, self.view.bounds.size.width, 235)];
+    
+    if ([currentPlatform isEqualToString:@"iPhone9,1"]||[currentPlatform isEqualToString:@"x86_64"])
+    {
+        self.scrollView = [[CycleBannerView alloc] initWithFrame:CGRectMake(0, 54, self.view.bounds.size.width, 0.55*self.view.bounds.size.width)];
+    }
+    else{
+         self.scrollView = [[CycleBannerView alloc] initWithFrame:CGRectMake(0, 88, self.view.bounds.size.width, 0.55*self.view.bounds.size.width)];
+    }
+    
     
     [self.view addSubview:self.scrollView];
     

@@ -60,9 +60,10 @@
     
     self.title = @"【专题 —— 妹纸】";
     
+    [self initTableView];
+    
     [self addTopButton];
     
-    [self initTableView];
 }
 
 #pragma mark- 加载数据
@@ -107,7 +108,34 @@
 
 // 初始化 tableview
 - (void) initTableView{
-    UITableView *tableview = [[UITableView alloc]initWithFrame:CGRectMake(5, 250, self.view.bounds.size.width+30, self.view.bounds.size.height+20)];
+      
+    extern NSString *currentPlatform;
+    
+    CGFloat x;
+    CGFloat y;
+    CGFloat w;
+    CGFloat h;
+    
+    if([currentPlatform isEqualToString:@"x86_64"]||[currentPlatform isEqualToString:@"iPhone9,1"])
+    {
+        x=0;
+        y=54;
+        w=[UIScreen mainScreen].bounds.size.width;
+        h=[UIScreen mainScreen].bounds.size.height-54-(w+10)*0.55;
+    }else{
+        x=0;
+        y=88;
+        w=[UIScreen mainScreen].bounds.size.width;
+        h=[UIScreen mainScreen].bounds.size.height-88-(w+10)*0.55;
+    }
+    
+    UIImageView *imageview = [[UIImageView alloc]initWithFrame:CGRectMake(0, y, w+10, (w+10)*0.55)];
+    
+    [imageview  setImage:[UIImage imageNamed:@"girl.jpg"]];
+    
+    [self.view addSubview:imageview];
+    
+    UITableView *tableview = [[UITableView alloc]initWithFrame:CGRectMake(x,y+(w+10)*0.55,w,h)];
     
     tableview.delegate = self;
     tableview.dataSource = self;
@@ -118,11 +146,7 @@
     
     [self.tableView registerClass:[GirlTableViewCell class] forCellReuseIdentifier:@"GirlCell"];
     
-    UIImageView *imageview = [[UIImageView alloc]initWithFrame:CGRectMake(0, 89, self.view.bounds.size.width+40, self.view.bounds.size.width*0.4)];
     
-    [imageview  setImage:[UIImage imageNamed:@"girl.jpg"]];
-
-    [self.view addSubview:imageview];
     
     // 添加头部的下拉刷新
     MJRefreshNormalHeader *header = [[MJRefreshNormalHeader alloc] init];
@@ -198,7 +222,14 @@
 }
 
 - (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 120;
+    extern NSString *currentPlatform;
+    
+    CGFloat ratio = 1.0;
+    
+    if([currentPlatform isEqualToString:@"x86_64"]||[currentPlatform isEqualToString:@"iPhone9,1"])
+        ratio = 0.9;
+        
+    return 120*ratio;
 }
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -223,7 +254,7 @@
 - (void) addTopButton{
     UIButton *addButton = [UIButton buttonWithType:(UIButtonTypeCustom)];
     
-    [addButton setFrame:CGRectMake(SCREEN_WIDTH-40,SCREEN_HEIGHT-60, 30, 45)];
+    [addButton setFrame:CGRectMake(SCREEN_WIDTH-40,SCREEN_HEIGHT-60, 30, 30)];
    
     [addButton addTarget:self action:@selector(toTop) forControlEvents:(UIControlEventTouchUpInside)];
  

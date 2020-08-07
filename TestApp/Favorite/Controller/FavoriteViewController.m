@@ -28,28 +28,46 @@
     self.title = @"我的收藏";
 
     self.view.backgroundColor = [UIColor grayColor];
+    [self.view setFrame:[UIScreen mainScreen].bounds];
     
     [self initButton];
 }
 
 -(void)initButton{
+    extern NSString *currentPlatform;
     
-    UIButton *button1 = [[UIButton alloc]initWithFrame:CGRectMake(20, 90+20+50, (self.view.bounds.size.width), (self.view.bounds.size.height-90-80)/3)];
+    CGFloat navItemHeight;
+    
+    if([currentPlatform isEqualToString:@"x86_64"]||[currentPlatform isEqualToString:@"iPhone9,1"])
+    {
+        navItemHeight=54;
+    }else
+    {
+        navItemHeight=88;
+    }
+    
+    UIButton *button1 = [[UIButton alloc]initWithFrame:CGRectMake(10, navItemHeight+40, (self.view.bounds.size.width)-20, ((self.view.bounds.size.height)-navItemHeight-120)/3)];
     [button1 setBackgroundImage: [UIImage imageNamed:@"girl.jpg"] forState:UIControlStateNormal];
+    button1.layer.cornerRadius = 15;
+    button1.layer.masksToBounds = YES;
     [button1 addTarget:self action:@selector(popGirlView) forControlEvents:UIControlEventTouchUpInside];
     
-    UIButton *button2 = [[UIButton alloc]initWithFrame:CGRectMake(20, (self.view.bounds.size.height-90-80)/3+90+100+50, (self.view.bounds.size.width), (self.view.bounds.size.height-90-80)/3)];
+    UIButton *button2 = [[UIButton alloc]initWithFrame:CGRectMake(10, ((self.view.bounds.size.height)-54-80)/3+navItemHeight+60, (self.view.bounds.size.width)-20, ((self.view.bounds.size.height)-navItemHeight-120)/3)];
     [button2 setBackgroundImage: [UIImage imageNamed:@"ios.jpg"] forState:UIControlStateNormal];
+    button2.layer.cornerRadius = 15;
+    button2.layer.masksToBounds = YES;
     [button2 addTarget:self action:@selector(popIosView) forControlEvents:UIControlEventTouchUpInside];
     
-    UIButton *button3 = [[UIButton alloc]initWithFrame:CGRectMake(20, (self.view.bounds.size.height-90-80)*2/3+90+180+50, (self.view.bounds.size.width), (self.view.bounds.size.height-90-80)/3)];
+    UIButton *button3 = [[UIButton alloc]initWithFrame:CGRectMake(10, (self.view.bounds.size.height-54-80)*2/3+navItemHeight+80, (self.view.bounds.size.width)-20, ((self.view.bounds.size.height)-navItemHeight-120)/3)];
     [button3 setBackgroundImage: [UIImage imageNamed:@"android.jpg"] forState:UIControlStateNormal];
+    button3.layer.cornerRadius = 15;
+    button3.layer.masksToBounds = YES;
     [button3 addTarget:self action:@selector(popAndroidView) forControlEvents:UIControlEventTouchUpInside];
-
+    
     [self.view addSubview:button1];
     [self.view addSubview:button2];
     [self.view addSubview:button3];
-
+    
 }
 
 -(void)popGirlView{
